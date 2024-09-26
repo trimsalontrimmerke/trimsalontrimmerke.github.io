@@ -1,0 +1,18 @@
+.top-picture {
+    width: 100%; /* Full width */
+    overflow: hidden; /* Ensure no overflow */
+}
+
+    .top-picture img {
+        width: 100%; /* Full width */
+        height: auto; /* Maintain aspect ratio */
+        max-height: 300px; /* Adjust height as needed */
+        object-fit: cover; /* Cover the area */
+        display: block; /* Remove any space below the image */
+    }
+
+    @media (max-width: 768px) {
+        .top-picture img {
+            max-height: 200px; /* Adjust height for smaller screens */
+        }
+    }

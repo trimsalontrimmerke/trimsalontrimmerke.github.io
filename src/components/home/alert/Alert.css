@@ -1,0 +1,9 @@
+.alert-box {
+    padding: 15px;
+    background-color: #f44336; /* Red background for the alert */
+    color: white; /* White text */
+    margin-bottom: 10px; /* Some spacing below the alert */
+    border-radius: 4px; /* Rounded corners */
+    font-size: 16px; /* Font size for the alert */
+    text-align: center; /* Center the text */
+}

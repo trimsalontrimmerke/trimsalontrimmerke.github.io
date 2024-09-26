@@ -1,0 +1,68 @@
+.content-container {
+    display: flex; /* Flexbox layout */
+    justify-content: space-between; /* Space between sections */
+    align-items: stretch; /* Stretch sections to the same height */
+    padding: 10px; /* Padding around content */
+    flex-wrap: wrap; /* Allow sections to wrap on smaller screens */
+}
+
+/* Style for each section */
+.section {
+    display: flex; /* Flexbox layout for centering content */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    width: 45%; /* Adjust width as needed */
+    padding: 20px; /* Padding around each section */
+    box-sizing: border-box; /* Include padding in width calculation */
+    background-color: rgba(255, 255, 255, 0.8); /* Optional: background color for better visibility */
+}
+
+/* Additional styling for text and images within sections */
+.left-section h2,
+.left-section p,
+.right-section img {
+    margin: 0; /* Remove default margins */
+    text-align: center; /* Center text within the section */
+}
+.section h2 {
+    font-size: 2rem; /* Font size for larger screens */
+    color: rgb(0, 107, 204); /* Color matching your theme */
+    margin-bottom: 10px; /* Space below the heading */
+    text-align: center; /* Center align the heading text */
+    font-weight: bold; /* Make the text bold */
+}
+.textmarie {
+    text-align: left; /* This ensures all <p> elements are aligned to the left */
+    margin: 0 0 10px 0; /* Optional: add space below each paragraph */
+    line-height: 1.6; /* Optional: improve readability with line-height */
+    
+}
+p{
+    font-family: Bitter;
+    line-height: 1.5;
+}
+
+
+
+.right-section img {
+    max-width: 100%; /* Ensure the image is responsive */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 100%; /* Ensure image doesn't exceed container height */
+}
+@media (max-width: 768px) {
+    .content-container {
+        flex-direction: column; /* Stack sections vertically on smaller screens */
+        align-items: center; /* Center content horizontally */
+    }
+
+    .section {
+        width: 100%; /* Full width on small screens */
+        padding: 10px; /* Reduce padding on smaller screens */
+    }
+        .section h2 {
+            font-size: 1.5rem; /* Smaller font size for smaller screens */
+            margin-bottom: 8px; /* Reduced space below heading on smaller screens */
+        }
+
+}
