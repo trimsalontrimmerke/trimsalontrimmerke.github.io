@@ -1,0 +1,140 @@
+.above-form-container {
+    width: 100%; /* Full width */
+    min-height: auto; /* Allow it to grow as necessary */
+    display: flex; /* Flexbox to center content */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    flex-grow: 1; /* Allow it to grow to fill parent */
+    margin: 0;
+    padding: 10px;
+    box-sizing: border-box; /* Prevent overflow due to padding */
+    flex-wrap: wrap; /* Ensure it wraps when the screen size is small */
+}
+
+.layout-row {
+    display: flex;
+    justify-content: space-between; /* Space between columns */
+    align-items: stretch; /* Stretch columns to fill the same height */
+    width: 100%; /* Full width */
+    flex-wrap: wrap; /* Ensure columns stack on smaller screens */
+    gap: 20px; /* Add space between left and right columns */
+}
+
+
+
+.left-column {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    justify-content: space-between; /* Space between items */
+    width: 100%; /* Full width on small screens */
+    flex-grow: 1; /* Allow it to stretch and fill available space */
+    
+}
+
+.left-item {
+   
+    margin-bottom: 10px; /* Space between stacked items */
+   /* padding: 20px;*/
+    background-color: rgba(59, 203, 255, 0.7);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    color: white;
+    font-size: 1.2rem;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.left-item-last {
+    margin-bottom: 0px;
+    padding-bottom: 10px;
+}
+
+.right-column {
+    margin-top:20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    width: 100%; /* Full width on small screens */
+    flex-grow: 1; /* Allow it to stretch and fill available space */
+}
+
+.right-item {
+    height: 100%; /* Stretch to fill available height */
+    padding: 20px;
+    background-color: rgba(59, 203, 255, 0.7);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    color: white;
+    font-size: 1.2rem;
+    text-align: center;
+    flex-grow: 1; /* Allow it to grow to fill available space */
+}
+
+.icon {
+    height: 50px;
+}
+
+/* Phone number link styling */
+.phone-link {
+    color: white; /* Set text color to white */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.2s ease; /* Smooth color transition */
+}
+
+/* Phone number link hover effect */
+.phone-link:hover {
+    color: rgb(0, 32, 61); /* Darker color on hover for better visibility */
+}
+
+.address-link {
+    color: white; /* Matches the theme */
+    text-decoration: none; /* Removes underline */
+    transition: color 0.2s ease; /* Smooth color transition */
+    line-height: 1.5; /* Improve readability */
+}
+
+.address-link:hover {
+    color: rgb(0, 32, 61); /* Darker color on hover for emphasis */
+}
+
+/* Media query for larger screens */
+@media (min-width: 768px) {
+    .layout-row {
+        flex-direction: row; /* Align columns side by side on larger screens */
+    }
+
+    .left-column {
+        width: 45%; /* Adjust width to fit 3 items */
+    }
+
+    .right-column {
+        width: 50%; /* Adjust width to fit the right item */
+    }
+}
+
+/* Stack the columns under each other on smaller screens */
+@media (max-width: 768px) {
+    .layout-row {
+        flex-direction: column; /* Stack the left and right columns vertically */
+       /* gap: 10px; /* Optional: reduce the gap between stacked items */
+    }
+
+    .left-column, .right-column {
+        width: 100%; /* Ensure full width when stacked */
+    }
+
+    .left-item{
+        width: 100%;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        
+    }
+
+    .right-item{
+        width: 100%;
+        margin-bottom: 5px;
+      
+        
+    }
+}

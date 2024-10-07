@@ -15,10 +15,10 @@ function Header() {
   return (
     <header>
       <nav className="navbar">
-        <div className={`navcontainer ${isMenuOpen ? 'active' : ''}`}>
+        <div className={`navcontainerHeader ${isMenuOpen ? 'active' : ''}`}>
           {/* Logo */}
           <Link to="/home">
-            <img className="logo" src="/img/logo.jpg" alt="Logo" />
+            <img className="logo" src={`${process.env.PUBLIC_URL}/img/logo.jpg`} alt="Logo" />
           </Link>
 
           {/* Hamburger icon (for small screens) */}
@@ -29,26 +29,26 @@ function Header() {
           {/* Navbar links */}
           <ul className="ul-header">
             <li className="nav-item li-header">
-              <Link className="navtext" to="/home">Home</Link>
+              <Link className="navtextHeader" to="/home">Home</Link>
             </li>
             <li className="nav-item li-header">
-              <Link className="navtext" to="/regels">Huisregels</Link>
+              <Link className="navtextHeader" to="/regels">Huisregels</Link>
             </li>
             <li className="nav-item li-header">
-              <Link className="navtext" to="/fotos">Foto's</Link>
+              <Link className="navtextHeader" to="/fotos">Foto's</Link>
             </li>
             <li className="nav-item li-header">
-              <Link className="navtext" to="/contact">Contact</Link>
+              <Link className="navtextHeader" to="/contact">Contact</Link>
             </li>
           </ul>
 
           {/* Right-side social media links */}
           <div className="right-side-items">
-            <a href="https://www.facebook.com/profile.php?id=61565774567395" className="nav-link" target="_blank" rel="noreferrer">
-              <img src="/img/facebook.png" alt="Facebook" />
+            <a href="https://www.facebook.com/profile.php?id=61565857696098" className="nav-link" target="_blank" rel="noreferrer">
+              <img src={`${process.env.PUBLIC_URL}/img/facebook.png`} alt="Facebook" />
             </a>
-            <a href="https://www.instagram.com/marie.stragier/" className="nav-link" target="_blank" rel="noreferrer">
-              <img src="/img/insta.png" alt="Instagram" />
+            <a href="https://www.instagram.com/trimsalon_t_trimmerke/" className="nav-link" target="_blank" rel="noreferrer">
+              <img src={`${process.env.PUBLIC_URL}/img/insta.png`} alt="Instagram" />
             </a>
           </div>
         </div>

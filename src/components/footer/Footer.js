@@ -4,9 +4,11 @@ import './Footer.css';
 function Footer() {
   const currentYear = new Date().getFullYear(); // Dynamically get the current year
   return (
-    <footer className="footer text-muted">
+    <footer className="footer">
       <div className="container">
-        &copy; {currentYear} - &rsquo;t trimmerke - btw 1013.798.369
+        <p className="footer-text">
+          &copy; {currentYear} - &rsquo;t Trimmerke - btw: BE1013798369
+        </p>
       </div>
     </footer>
   );

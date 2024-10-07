@@ -1,0 +1,17 @@
+body{
+    margin: 0%;
+}
+.background-container-contact {
+    width: 100%;           /* Full width of the viewport */
+    min-height: 100vh;     /* Ensure it grows if content is larger than the viewport */
+    margin: 0 auto;        /* Center the container horizontally, applying equal margins on both sides */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-sizing: border-box; /* Ensures padding is part of the container's width */
+    overflow-y: auto;      /* Enable vertical scrolling if content is too large */
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Center content vertically */
+    align-items: stretch; /* Stretch content horizontally to fill */
+}

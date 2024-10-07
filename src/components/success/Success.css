@@ -1,0 +1,83 @@
+
+.success-above-form-container {
+    width: 100%; /* Take the full width available */
+    max-width: 1000px; /* Limit the maximum width */
+    margin-top: 40px;
+    margin-bottom: 20px; /* Space between new content and the form */
+    display: flex; /* Flexbox to center content */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    flex-direction: column; /* Stack items vertically on small screens */
+}
+
+.success-layout-row {
+    display: flex;
+    justify-content: space-between; /* Space between columns */
+    align-items: stretch; /* Stretch columns to the same height */
+    width: 100%; /* Ensure it fills the container */
+    flex-direction: column; /* Stack items vertically on small screens */
+}
+
+.success-left-column {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    justify-content: space-between; /* Space between items */
+    width: 100%; /* Full width on small screens */
+}
+
+.success-left-item {
+    margin-bottom: 10px; /* Space between stacked items */
+    padding: 20px;
+    background-color: rgba(59, 203, 255, 0.7);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    color: white;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.success-left-item-last {
+    margin-bottom: 0px;
+}
+
+.success-right-column {
+    width: 100%; /* Full width on small screens */
+    display: flex;
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+}
+
+.success-right-item {
+    height: 100%; /* Adjust height to content */
+    padding: 20px;
+    background-color: rgba(59, 203, 255, 0.7);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    color: white;
+    font-size: 1.2rem;
+    text-align: center;
+    flex-grow: 1; /* Grow to fill available space */
+}
+
+
+
+/* Media query for larger screens */
+@media (min-width: 768px) {
+    .success-layout-row {
+        flex-direction: row; /* Align columns side by side on larger screens */
+    }
+
+    .success-left-column {
+        width: 45%; /* Adjust width to fit 3 items */
+    }
+
+    .success-right-column {
+        width: 50%; /* Adjust width to fit the right item */
+    }
+}
+
+@media (max-width: 768px) {
+    .success-left-item-last {
+        margin-bottom: 10px;
+    }
+}

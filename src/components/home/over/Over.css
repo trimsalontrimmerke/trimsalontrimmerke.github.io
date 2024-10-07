@@ -18,6 +18,11 @@
     background-color: rgba(255, 255, 255, 0.8); /* Optional: background color for better visibility */
 }
 
+.left-section{
+    padding-right: 0px !important;
+    padding-left: 50px !important;
+}
+
 /* Additional styling for text and images within sections */
 .left-section h2,
 .left-section p,
@@ -38,9 +43,10 @@
     line-height: 1.6; /* Optional: improve readability with line-height */
     
 }
-p{
-    font-family: Bitter;
+.pOver{
+    font-family: Calibri;
     line-height: 1.5;
+    text-align: left; 
 }
 
 
@@ -63,6 +69,9 @@ p{
         .section h2 {
             font-size: 1.5rem; /* Smaller font size for smaller screens */
             margin-bottom: 8px; /* Reduced space below heading on smaller screens */
+        }
+        .textmarie{
+            margin: 0;
         }
 
 }

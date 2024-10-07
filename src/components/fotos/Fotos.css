@@ -1,0 +1,123 @@
+.fotos-container {
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.fotos-container h1 {
+  color: rgb(0, 107, 204);
+  font-size: 2.5rem;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  margin-top: 20px;
+  margin-bottom: 40px; /* More space between the title and photos */
+  font-weight: 600;
+}
+
+.fotos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 items per row by default */
+  gap: 20px;
+}
+
+.fotos-gallery-item {
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fotos-gallery-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+.fotos-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+
+/* Pagination Styles - Redesigned */
+.fotos-pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px; /* Spacing from photos */
+}
+
+.fotos-pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+}
+
+.fotos-page-item {
+  margin: 0 8px; /* More spacing between buttons */
+}
+
+.fotos-page-link {
+  background-color: transparent;
+  border: 2px solid rgb(0, 107, 204); /* Outlined buttons */
+  color: rgb(0, 107, 204); /* Text matches the outline */
+  padding: 10px 20px;
+  border-radius: 50px; /* Smooth pill-shaped buttons */
+  font-weight: bold;
+  font-size: 1.1rem; /* Slightly larger text */
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none; /* Remove underline */
+}
+
+/* Hover effect for all buttons */
+.fotos-page-link:hover {
+  background-color: rgb(0, 107, 204);
+  color: white; /* Text changes to white */
+  transform: translateY(-3px); /* Slight lift */
+  box-shadow: 0 8px 16px rgba(0, 107, 204, 0.3); /* Glow effect */
+}
+
+.fotos-page-item.disabled .fotos-page-link {
+  border-color: lightgray;
+  color: lightgray;
+  cursor: not-allowed;
+  opacity: 0.6; /* Slightly transparent for a disabled look */
+}
+/* Active page styling - Circular button */
+.fotos-page-item.active .fotos-page-link {
+  background-color: rgb(255, 159, 28); /* Orange color for active */
+  border: none; /* Remove outline for active */
+  color: white;
+  border-radius: 50%; /* Make the button circular */
+  width: 40px;
+  height: 40px;
+  padding: 0; /* Adjust padding for the circle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fotos-page-item.active .fotos-page-link:hover {
+  transform: none; /* No hover effect on active */
+  box-shadow: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+  .fotos-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 items per row */
+  }
+}
+
+@media (max-width: 575.98px) {
+  .fotos-grid {
+    grid-template-columns: 1fr; /* 1 item per row */
+  }
+
+  .fotos-page-item {
+    margin: 0 4px; /* Less spacing on mobile */
+  }
+
+  .fotos-page-link {
+    padding: 8px 16px; /* Adjust padding for mobile */
+  }
+}
