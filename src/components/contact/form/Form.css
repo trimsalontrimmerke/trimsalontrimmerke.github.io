@@ -5,7 +5,7 @@
     padding-top: 20px;
     /*padding-left: 20px;
     padding-right: 20px;*/
-    margin: 0 20px auto 20px; /* Center horizontally */
+    margin: 20px auto 20px; /* Center horizontally */
     background-color: rgba(59, 203, 255, 0.7);
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -140,12 +140,14 @@
 /* Stack the columns under each other on smaller screens */
 @media (max-width: 768px) {
     .top-container-form{
-        padding: 10px;
+        padding-left: 5%;
+        width: 90%;
+        padding-right: 5%;
     }
     .containerform{
       
         margin: 0;
         margin-bottom: 10px;
-        width: 100%;
+        width: 5%;
     }
 }
