@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import API_URL from '../../../config/config'; // Ensure the path to your config file is correct
 import './BackFotos.css'; // Import CSS for styling
+import BackNav from '../nav/BackNav';
 
 const BackFotos = () => {
   const [images, setImages] = useState([]);
@@ -47,7 +48,7 @@ const BackFotos = () => {
 
       const data = await response.json();
       // Reverse the images array to show the last uploaded picture first
-      setImages(data.reverse());
+      setImages(data);
     } catch (error) {
       setErrorMessage('Error fetching images.');
     } finally {
@@ -96,8 +97,11 @@ const BackFotos = () => {
   };
 
   // Delete an image
-  const handleDelete = async (filename) => {
+  const handleDelete = async (fullPath) => {
     setLoading(true);
+    // Extract filename from the full path
+    const filename = fullPath.split('/').pop(); // This gets just the filename part
+
     try {
       const response = await fetch(`${API_URL}fotos/images/${filename}`, { // Corrected endpoint
         method: 'DELETE',
@@ -128,34 +132,52 @@ const BackFotos = () => {
   }
 
   return (
-    <div className="back-fotos-container">
-      <h2>Admin - Manage Photos</h2>
-      {successMessage && <p className="success-message">{successMessage}</p>}
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
-
-      <div className="upload-container">
-        <input type="file" onChange={handleFileChange} className="file-input" />
-        <button onClick={handleUpload} className="upload-button">Upload Image</button>
-      </div>
-
-      <h3>Uploaded Images</h3>
-      <div className="image-list">
-        {images.length === 0 ? (
-          <p>No images uploaded.</p>
-        ) : (
-          images.map((image) => (
-            <div key={image.name} className="image-item">
-              <img src={image.publicUrl} alt={image.name} className="image-preview" />
-              <div className="image-details">
-                <p className="image-name">{image.name}</p>
-                <button onClick={() => handleDelete(image.name)} className="delete-button">Delete</button>
+    <div>
+      <BackNav />
+      <div className="BackFotos-container">
+        <h2>Admin - Manage Photos</h2>
+        {successMessage && <p className="BackFotos-success-message">{successMessage}</p>}
+        {errorMessage && <p className="BackFotos-error-message">{errorMessage}</p>}
+  
+        <div className="BackFotos-upload-section">
+          <input 
+            type="file" 
+            onChange={handleFileChange} 
+            className="BackFotos-file-input" 
+            placeholder="Select an image to upload..." 
+          />
+          <button onClick={handleUpload} className="BackFotos-upload-button">Upload Image</button>
+        </div>
+  
+        <h3>Uploaded Images</h3>
+        <div className="BackFotos-image-list">
+          {images.length === 0 ? (
+            <p>No images uploaded.</p>
+          ) : (
+            images.map((image) => (
+              <div key={image.publicUrl} className="BackFotos-image-item">
+                <img 
+                  src={image.publicUrl} 
+                  alt={image.name} 
+                  className="BackFotos-image-preview" 
+                />
+                <div className="BackFotos-image-details">
+                  <p className="BackFotos-image-name">{image.name}</p>
+                  <button 
+                    onClick={() => handleDelete(image.publicUrl)} 
+                    className="BackFotos-delete-button"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
+  
 };
 
 export default BackFotos;

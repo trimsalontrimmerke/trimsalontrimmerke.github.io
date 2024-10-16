@@ -1,15 +1,16 @@
 
 .containerform {
     max-width: 800px; /* Adjust as needed */
-    width: 100%; /* Full width */
+    width: 90%; /* Full width */
     padding-top: 20px;
-    /*padding-left: 20px;
-    padding-right: 20px;*/
+    padding-left: 5%;
+    padding-right: 5%;
     margin: 20px auto 20px; /* Center horizontally */
     background-color: rgba(59, 203, 255, 0.7);
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     margin-bottom: 20px;
+
 }
 
     .containerform form {
@@ -148,6 +149,6 @@
       
         margin: 0;
         margin-bottom: 10px;
-        width: 5%;
+        width: 90%;
     }
 }

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import API_URL from '../../../config/config'; // Make sure this is your API config
+import BackNav from '../nav/BackNav';
+import './BackOpening.css';
+
 
 const BackOpeningHours = () => {
   const [hoursData, setHoursData] = useState({});
@@ -105,55 +108,66 @@ const BackOpeningHours = () => {
 
   return (
     <div>
-      <h2>Admin - Update Opening Hours</h2>
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-
-      <div>
-        {daysOrder.map((day) => (
-          <div key={day} className="day-section">
-            <h3>{day.charAt(0).toUpperCase() + day.slice(1)}</h3>
-
-            {/* Show Open and Close time fields only if "isClosed" is unchecked */}
-            {!hoursData[day]?.isClosed && (
-              <>
-                <label>
-                  Open:
-                  <input
-                    type="time"
-                    value={hoursData[day]?.open || ''}
-                    onChange={(e) => handleInputChange(day, 'open', e.target.value)}
-                  />
-                </label>
-
-                <label>
-                  Close:
-                  <input
-                    type="time"
-                    value={hoursData[day]?.close || ''}
-                    onChange={(e) => handleInputChange(day, 'close', e.target.value)}
-                  />
-                </label>
-              </>
-            )}
-
-            <label>
-              Closed:
-              <input
-                type="checkbox"
-                checked={hoursData[day]?.isClosed || false}
-                onChange={(e) => handleInputChange(day, 'isClosed', e.target.checked)}
-              />
-            </label>
-          </div>
-        ))}
+      <BackNav />
+      <div className="BackOpeningstijden-container">
+      <div className="BackOpeningstijden-content">
+        <h2 className="BackOpeningstijden-title">Admin - Update Opening Hours</h2>
+        {successMessage && <p className="BackOpeningstijden-success-message">{successMessage}</p>}
+        {errorMessage && <p className="BackOpeningstijden-error-message">{errorMessage}</p>}
+  
+        <div className="BackOpeningstijden-days">
+          {daysOrder.map((day) => (
+            <div key={day} className="BackOpeningstijden-day-section">
+              <h3 className="BackOpeningstijden-day-title">{day.charAt(0).toUpperCase() + day.slice(1)}</h3>
+  
+              {/* Show Open and Close time fields only if "isClosed" is unchecked */}
+              {!hoursData[day]?.isClosed && (
+                <>
+                  <label className="BackOpeningstijden-label">
+                    Open:
+                    <input
+                      type="time"
+                      value={hoursData[day]?.open || ''}
+                      onChange={(e) => handleInputChange(day, 'open', e.target.value)}
+                      className="BackOpeningstijden-input"
+                    />
+                  </label>
+  
+                  <label className="BackOpeningstijden-label">
+                    Close:
+                    <input
+                      type="time"
+                      value={hoursData[day]?.close || ''}
+                      onChange={(e) => handleInputChange(day, 'close', e.target.value)}
+                      className="BackOpeningstijden-input"
+                    />
+                  </label>
+                </>
+              )}
+  
+              <label className="BackOpeningstijden-label">
+                Closed:
+                <input
+                  type="checkbox"
+                  checked={hoursData[day]?.isClosed || false}
+                  onChange={(e) => handleInputChange(day, 'isClosed', e.target.checked)}
+                  className="BackOpeningstijden-checkbox"
+                />
+                <span className="BackOpeningstijden-checkbox-custom"></span>
+              </label>
+            </div>
+          ))}
+        </div>
+  
+        <button onClick={handleUpdateHours} className="BackOpeningstijden-update-button">
+          Update Opening Hours
+        </button>
       </div>
-
-      <button onClick={handleUpdateHours} className="update-button">
-        Update Opening Hours
-      </button>
+    </div>
     </div>
   );
-};
+  
+}
+
 
 export default BackOpeningHours;

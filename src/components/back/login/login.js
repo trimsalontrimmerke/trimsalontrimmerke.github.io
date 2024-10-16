@@ -2,11 +2,14 @@
 import React, { useState } from 'react';
 import { auth } from '../../../firebaseConfig'; // Ensure to import the auth
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import './login.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,7 +25,8 @@ const Login = () => {
       localStorage.setItem('authToken', token); // Store token in local storage
 
       console.log("User logged in successfully, token:", token);
-      // Now you can use the token to access other services, if needed
+      // Redirect to /back/alert after successful login
+      navigate('/back/alert');
 
     } catch (error) {
       setError(error.message); // Update error state
@@ -31,32 +35,37 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
+    <div className="Login-container">
+      <div className="Login-card">
+        <h2 className="Login-title">Login</h2>
+        {error && <p className="Login-error-message">{error}</p>}
+        <form onSubmit={handleLogin} className="Login-form">
+          <div className="Login-form-group">
+            <label className="Login-label">Email:</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="Login-input"
+            />
+          </div>
+          <div className="Login-form-group">
+            <label className="Login-label">Password:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="Login-input"
+            />
+          </div>
+          <button type="submit" className="Login-button">Login</button>
+        </form>
+      </div>
     </div>
   );
+  
 };
 
 export default Login;

@@ -29,6 +29,7 @@
     width: 100%; /* Full width on small screens */
     flex-grow: 1; /* Allow it to stretch and fill available space */
     
+    
 }
 
 .left-item {
@@ -42,6 +43,7 @@
     font-size: 1.2rem;
     text-align: center;
     padding-bottom: 10px;
+    height: 33%;
 }
 
 .left-item-last {

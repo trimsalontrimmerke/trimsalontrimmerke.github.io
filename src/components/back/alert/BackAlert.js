@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import API_URL from '../../../config/config'; // Make sure this is your API config
+import BackNav from '../nav/BackNav';
+import './BackAlert.css';
+
 
 const BackAlert = () => {
   const [alertData, setAlertData] = useState({ text: '', show: false });
@@ -96,35 +99,46 @@ const BackAlert = () => {
 
   return (
     <div>
-      <h2>Admin - Update Alert</h2>
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-
-      <div>
-        <label>
-          Alert Message:
-          <input
-            type="text"
-            value={newText}
-            onChange={(e) => setNewText(e.target.value)}
-          />
-        </label>
+      <BackNav />
+      <div className="BackAlert-container">
+      <div className="BackAlert-content">
+        <h2 className="BackAlert-title">Admin - Update Alert</h2>
+        {successMessage && <p className="BackAlert-success-message">{successMessage}</p>}
+        {errorMessage && <p className="BackAlert-error-message">{errorMessage}</p>}
+  
+        <div className="BackAlert-input-group">
+          <label className="BackAlert-label">
+            Alert Message:
+            <input
+              type="text"
+              value={newText}
+              onChange={(e) => setNewText(e.target.value)}
+              className="BackAlert-input"
+            />
+          </label>
+        </div>
+  
+        <div className="BackAlert-input-group">
+          <label className="BackAlert-label">
+            Show Alert:
+            <input
+              type="checkbox"
+              checked={newShow}
+              onChange={(e) => setNewShow(e.target.checked)}
+              className="BackAlert-checkbox"
+            />
+            <span className="BackAlert-checkbox-custom"></span>
+          </label>
+        </div>
+  
+        <button onClick={handleUpdateAlert} className="BackAlert-update-button">
+          Update Alert
+        </button>
       </div>
-
-      <div>
-        <label>
-          Show Alert:
-          <input
-            type="checkbox"
-            checked={newShow}
-            onChange={(e) => setNewShow(e.target.checked)}
-          />
-        </label>
-      </div>
-
-      <button onClick={handleUpdateAlert}>Update Alert</button>
+    </div>
     </div>
   );
+  
 };
 
 export default BackAlert;

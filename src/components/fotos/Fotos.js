@@ -1,3 +1,4 @@
+// src/components/Fotos.js
 import React, { useState, useEffect } from 'react';
 import './Fotos.css'; // Your CSS styles
 import API_URL from '../../config/config'; // Ensure the path to your config file is correct
@@ -21,8 +22,8 @@ function Fotos() {
         throw new Error('Network response was not ok ' + response.statusText);
       }
       const data = await response.json();
-      // Set the photos using the publicUrl
-      setPhotos(data.map(photo => photo.publicUrl)); 
+      // Reverse the photos array before setting it to state
+      setPhotos(data.map(photo => photo.publicUrl).reverse()); // Reverse the order of photos
     } catch (error) {
       console.error('Error fetching photos:', error);
       setError(error.message);

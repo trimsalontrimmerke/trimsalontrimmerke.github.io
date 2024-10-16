@@ -1,0 +1,39 @@
+/* BackNav.css */
+
+.BackNav-nav {
+  padding: 1rem;
+  background-color: #f4f4f4;
+  border-bottom: 2px solid #ccc;
+}
+
+.BackNav-ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+.BackNav-li {
+  margin: 0 1rem;
+}
+
+.BackNav-link {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+.BackNav-link:hover {
+  color: #007BFF; /* Change color on hover */
+}
+
+.BackNav-logout-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: bold; /* Match link style */
+}
+
+.BackNav-logout-button:hover {
+  color: #c82333; /* Darker color on hover for logout */
+}
