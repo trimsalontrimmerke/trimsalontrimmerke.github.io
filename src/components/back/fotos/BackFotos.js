@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import API_URL from '../../../config/config'; // Ensure the path to your config file is correct
+import './BackFotos.css'; // Import CSS for styling
 
 const BackFotos = () => {
   const [images, setImages] = useState([]);
@@ -45,7 +46,8 @@ const BackFotos = () => {
       }
 
       const data = await response.json();
-      setImages(data);
+      // Reverse the images array to show the last uploaded picture first
+      setImages(data.reverse());
     } catch (error) {
       setErrorMessage('Error fetching images.');
     } finally {
@@ -118,22 +120,22 @@ const BackFotos = () => {
   };
 
   if (!isLoggedIn) {
-    return <p>Please log in to manage photos.</p>;
+    return <p className="warning-message">Please log in to manage photos.</p>;
   }
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p className="loading-message">Loading...</p>;
   }
 
   return (
-    <div>
+    <div className="back-fotos-container">
       <h2>Admin - Manage Photos</h2>
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+      {successMessage && <p className="success-message">{successMessage}</p>}
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-      <div>
-        <input type="file" onChange={handleFileChange} />
-        <button onClick={handleUpload}>Upload Image</button>
+      <div className="upload-container">
+        <input type="file" onChange={handleFileChange} className="file-input" />
+        <button onClick={handleUpload} className="upload-button">Upload Image</button>
       </div>
 
       <h3>Uploaded Images</h3>
@@ -143,10 +145,10 @@ const BackFotos = () => {
         ) : (
           images.map((image) => (
             <div key={image.name} className="image-item">
-              <img src={image.publicUrl} alt={image.name} style={{ maxWidth: '100px', maxHeight: '100px' }} />
-              <div>
-                <p>{image.name}</p>
-                <button onClick={() => handleDelete(image.name)}>Delete</button>
+              <img src={image.publicUrl} alt={image.name} className="image-preview" />
+              <div className="image-details">
+                <p className="image-name">{image.name}</p>
+                <button onClick={() => handleDelete(image.name)} className="delete-button">Delete</button>
               </div>
             </div>
           ))
