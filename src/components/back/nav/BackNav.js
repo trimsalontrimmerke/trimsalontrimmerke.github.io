@@ -20,16 +20,16 @@ const BackNav = () => {
   return (
     <nav className="BackNav-nav">
       <ul className="BackNav-ul">
-        <li className="BackNav-li" onClick={() => navigate('/')}>
-          <span className="BackNav-link">Home</span>
+        <li className="BackNav-li" onClick={() => navigate('/back/carousel')}>
+          <span className="BackNav-link">Manage Carousel</span>
         </li>
-        <li className="BackNav-li" onClick={() => navigate('/manage-photos')}>
+        <li className="BackNav-li" onClick={() => navigate('/back/fotos')}>
           <span className="BackNav-link">Manage Photos</span>
         </li>
-        <li className="BackNav-li" onClick={() => navigate('/update-alert')}>
+        <li className="BackNav-li" onClick={() => navigate('/back/alert')}>
           <span className="BackNav-link">Update Alert</span>
         </li>
-        <li className="BackNav-li" onClick={() => navigate('/update-opening-hours')}>
+        <li className="BackNav-li" onClick={() => navigate('/back/openingsuren')}>
           <span className="BackNav-link">Update Opening Hours</span>
         </li>
         <li className="BackNav-li">
