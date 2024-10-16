@@ -1,0 +1,47 @@
+/* BackCarousel.css */
+.carousel-management {
+    margin: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.upload-section {
+    margin-bottom: 20px;
+}
+
+.upload-section input {
+    margin-right: 10px;
+}
+
+.image-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.image-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.image-preview {
+    max-width: 150px; /* Increase size as needed */
+    max-height: 150px; /* Increase size as needed */
+    margin-right: 10px;
+}
+
+.image-item button {
+    background-color: #d9534f; /* Bootstrap danger color */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.image-item button:hover {
+    background-color: #c9302c; /* Darker shade for hover */
+}

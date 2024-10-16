@@ -11,6 +11,7 @@ import Login from './components/back/login/login';
 import BackAlert from './components/back/alert/BackAlert';
 import BackOpeningHours from './components/back/openingsuren/BackOpening';
 import BackFotos from './components/back/fotos/BackFotos';
+import BackCarousel from './components/back/carousel/BackCarousel';
 import './App.css'; // Make sure to import your main CSS
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
             <Route path="/back/alert" element={<BackAlert />}/>
             <Route path='/back/openingsuren' element = {<BackOpeningHours />} />
             <Route path='/back/fotos' element={<BackFotos />} />
+            <Route path='/back/carousel' element={<BackCarousel />} /> {/* Added new route for carousel */}
             <Route path="*" element={<Home />} />
           </Routes>
         </div>

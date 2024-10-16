@@ -1,107 +1,108 @@
+/* BackFotos.css */
+
 .back-fotos-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  h2 {
-    text-align: center;
-    color: #333;
-  }
-  
-  h3 {
-    margin-top: 20px;
-    color: #555;
-  }
-  
-  .success-message {
-    color: green;
-    text-align: center;
-  }
-  
-  .error-message {
-    color: red;
-    text-align: center;
-  }
-  
-  .upload-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .file-input {
-    margin-right: 10px;
-  }
-  
-  .upload-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .upload-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .image-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .image-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 10px;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .image-preview {
-    max-width: 100px;
-    max-height: 100px;
-    object-fit: cover;
-  }
-  
-  .image-details {
-    padding: 10px;
-    text-align: center;
-  }
-  
-  .image-name {
-    font-size: 14px;
-    margin: 0;
-  }
-  
-  .delete-button {
-    padding: 5px 10px;
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .delete-button:hover {
-    background-color: #c82333;
-  }
-  
-  .loading-message, .warning-message {
-    text-align: center;
-    font-size: 18px;
-    color: #555;
-  }
-  
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+h3 {
+  margin-top: 20px;
+  color: #555;
+}
+
+.success-message {
+  color: green;
+  text-align: center;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+}
+
+.upload-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.file-input {
+  margin-right: 10px;
+}
+
+.upload-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.upload-button:hover {
+  background-color: #0056b3;
+}
+
+.image-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.image-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview {
+  max-width: 200px;  /* Set maximum width for the images */
+  max-height: 200px; /* Set maximum height for the images */
+  object-fit: cover;  /* Ensure the image covers the area without distortion */
+}
+
+.image-details {
+  padding: 10px;
+  text-align: center;
+}
+
+.image-name {
+  font-size: 14px;
+  margin: 0;
+}
+
+.delete-button {
+  padding: 5px 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+.loading-message, .warning-message {
+  text-align: center;
+  font-size: 18px;
+  color: #555;
+}
