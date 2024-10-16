@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Carousel.css'; // Import styles for the carousel component
+import API_URL from '../../config/config'; // Ensure the path to your config file is correct
 
 const Carousel = () => {
   const [photos, setPhotos] = useState([]);
   const [photoNumber, setPhotoNumber] = useState(0);
-  const totalPhotos = 8; // Total number of photos
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [totalPhotos, setTotalPhotos] = useState(0); // Use state to dynamically set total photos
+  const autoScrollInterval = useRef(null); // Use ref to hold interval ID
 
   useEffect(() => {
-    generatePhotoUrls(1, totalPhotos); // Generate image URLs on component mount
+    fetchPhotos(); // Fetch photos on component mount
     startAutoScroll();
 
     // Cleanup on component unmount
@@ -29,17 +33,23 @@ const Carousel = () => {
     };
   }, [photoNumber]);
 
-  let autoScrollInterval;
-
-  const generatePhotoUrls = (start, end) => {
-    const basePath = `${process.env.PUBLIC_URL}/img/carouselFotos/foto`;
-    const fileExtension = '.jpg';
-    const urls = [];
-
-    for (let i = start; i <= end; i++) {
-      urls.push(`${basePath}${i}${fileExtension}`);
+  const fetchPhotos = async () => {
+    try {
+      const response = await fetch(`${API_URL}carousel/images`); // Adjust API endpoint if needed
+      if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
+      }
+      const data = await response.json();
+      // Set the photos using the publicUrl
+      setPhotos(data.map(photo => photo.publicUrl));
+      setTotalPhotos(data.length); // Update totalPhotos based on fetched data
+      setPhotoNumber(0); // Reset photo number to 0 to show the first photo
+    } catch (error) {
+      console.error('Error fetching photos:', error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
-    setPhotos(urls);
   };
 
   const nextPhoto = () => {
@@ -51,12 +61,12 @@ const Carousel = () => {
   };
 
   const startAutoScroll = () => {
-    autoScrollInterval = setInterval(nextPhoto, 5000); // 5-second interval
+    autoScrollInterval.current = setInterval(nextPhoto, 5000); // 5-second interval
   };
 
   const stopAutoScroll = () => {
-    if (autoScrollInterval) {
-      clearInterval(autoScrollInterval); // Clear interval to stop auto-scrolling
+    if (autoScrollInterval.current) {
+      clearInterval(autoScrollInterval.current); // Clear interval to stop auto-scrolling
     }
   };
 
@@ -67,6 +77,8 @@ const Carousel = () => {
       onMouseLeave={startAutoScroll}
     >
       <div className="carousel-slide">
+        {loading && <p>Loading photos...</p>}
+        {error && <p>Error fetching photos: {error}</p>}
         {photos.length > 0 && <img src={photos[photoNumber]} alt={`photo ${photoNumber}`} />}
       </div>
 
