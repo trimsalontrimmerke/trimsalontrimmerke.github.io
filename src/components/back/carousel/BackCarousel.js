@@ -1,8 +1,7 @@
-// BackCarousel.js
 import React, { useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import API_URL from '../../../config/config'; // Ensure the path to your config file is correct
-import './BackCarousel.css'; // Import the CSS styles
+import './BackCarousel.css'; // Import CSS for styling
 import BackNav from '../nav/BackNav';
 
 const BackCarousel = () => {
@@ -48,7 +47,7 @@ const BackCarousel = () => {
             }
 
             const data = await response.json();
-            setImages(data.reverse()); // Show last uploaded picture first
+            setImages(data); // Set fetched images
         } catch (error) {
             setErrorMessage('Error fetching images.');
         } finally {
@@ -76,9 +75,9 @@ const BackCarousel = () => {
             const response = await fetch(`${API_URL}carousel/upload`, {
                 method: 'POST',
                 headers: {
-                    Authorization: `Bearer ${userToken}` // Pass the Firebase Auth token
+                    Authorization: `Bearer ${userToken}`
                 },
-                body: formData // Send the file data
+                body: formData
             });
 
             if (!response.ok) {
@@ -97,14 +96,14 @@ const BackCarousel = () => {
     };
 
     // Delete an image
-    const handleDelete = async (fullPath) => {
+    const handleDelete = async (filename) => {
         setLoading(true);
-        const filename = fullPath.split('/').pop(); // This gets just the filename part
+        const name = filename.split('/').pop();
         try {
-            const response = await fetch(`${API_URL}carousel/images/${filename}`, {
+            const response = await fetch(`${API_URL}carousel/images/${name}`, {
                 method: 'DELETE',
                 headers: {
-                    Authorization: `Bearer ${userToken}` // Pass the Firebase Auth token
+                    Authorization: `Bearer ${userToken}`
                 }
             });
 
@@ -121,28 +120,31 @@ const BackCarousel = () => {
         }
     };
 
-    // Render for users not logged in
     if (!isLoggedIn) {
-        return <p>Please log in to manage photos.</p>;
+        return <p className="warning-message">Please log in to manage carousel images.</p>;
     }
 
-    // Render loading state
     if (loading) {
-        return <p>Loading...</p>;
+        return <p className="loading-message">Loading...</p>;
     }
 
     return (
         <div>
             <BackNav />
-            <div className="BackCarousel-carousel-management">
-                <h2>Admin - Manage Carousel Photos</h2>
-                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+            <div className="BackCarousel-container">
+                <h2>Admin - Manage Carousel Images</h2>
+                {successMessage && <p className="BackCarousel-success-message">{successMessage}</p>}
+                {errorMessage && <p className="BackCarousel-error-message">{errorMessage}</p>}
 
                 <div className="BackCarousel-upload-section">
-    <input type="file" onChange={handleFileChange} placeholder="Select an image to upload..." />
-    <button onClick={handleUpload} className="BackCarousel-upload-button">Upload Image</button>
-</div>
+                    <input
+                        type="file"
+                        onChange={handleFileChange}
+                        className="BackCarousel-file-input"
+                        placeholder="Select an image to upload..."
+                    />
+                    <button onClick={handleUpload} className="BackCarousel-upload-button">Upload Image</button>
+                </div>
 
                 <h3>Uploaded Images</h3>
                 <div className="BackCarousel-image-list">
@@ -151,9 +153,20 @@ const BackCarousel = () => {
                     ) : (
                         images.map((image) => (
                             <div key={image.publicUrl} className="BackCarousel-image-item">
-                                <img src={image.publicUrl} alt={image.name} className="BackCarousel-image-preview" />
-                                <p>{image.name}</p>
-                                <button onClick={() => handleDelete(image.publicUrl)} className="delete-button">Delete</button>
+                                <img
+                                    src={image.publicUrl}
+                                    alt={image.name}
+                                    className="BackCarousel-image-preview"
+                                />
+                                <div className="BackCarousel-image-details">
+                                    <p className="BackCarousel-image-name">{image.name}</p>
+                                    <button
+                                        onClick={() => handleDelete(image.name)} // Use image.name for deletion
+                                        className="BackCarousel-delete-button"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         ))
                     )}

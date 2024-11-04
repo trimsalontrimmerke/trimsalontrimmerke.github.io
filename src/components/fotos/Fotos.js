@@ -23,7 +23,7 @@ function Fotos() {
       }
       const data = await response.json();
       // Reverse the photos array before setting it to state
-      setPhotos(data.map(photo => photo.publicUrl).reverse()); // Reverse the order of photos
+      setPhotos(data.map(photo => photo.publicUrl));
     } catch (error) {
       console.error('Error fetching photos:', error);
       setError(error.message);

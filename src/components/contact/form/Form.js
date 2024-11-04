@@ -59,7 +59,6 @@ const Form = () => {
         )
         .then(
           (response) => {
-            console.log("SUCCESS!", response.status, response.text);
             setSuccessMessage("Your message has been sent successfully!");
             setFormData({
               naam: "",

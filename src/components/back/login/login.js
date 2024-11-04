@@ -24,7 +24,6 @@ const Login = () => {
       const token = await user.getIdToken();
       localStorage.setItem('authToken', token); // Store token in local storage
 
-      console.log("User logged in successfully, token:", token);
       // Redirect to /back/alert after successful login
       navigate('/back/alert');
 

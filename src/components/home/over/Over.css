@@ -19,8 +19,8 @@
 }
 
 .left-section{
-    padding-right: 0px !important;
-    padding-left: 50px !important;
+    padding-right: 0px ;
+    padding-left: 50px;
 }
 
 /* Additional styling for text and images within sections */
@@ -28,7 +28,6 @@
 .left-section p,
 .right-section img {
     margin: 0; /* Remove default margins */
-    text-align: center; /* Center text within the section */
 }
 .section h2 {
     font-size: 2rem; /* Font size for larger screens */
@@ -44,9 +43,11 @@
     
 }
 .pOver{
+    width: 100%;
     font-family: Calibri;
     line-height: 1.5;
     text-align: left; 
+    padding-bottom: 1%;
 }
 
 
@@ -72,6 +73,11 @@
         }
         .textmarie{
             margin: 0;
+        }
+
+        .left-section{
+            padding-left : 2%;
+            padding-right: 2%;
         }
 
 }

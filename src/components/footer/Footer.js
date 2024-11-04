@@ -7,7 +7,7 @@ function Footer() {
     <footer className="footer">
       <div className="container">
         <p className="footer-text">
-          &copy; {currentYear} - &rsquo;t Trimmerke - btw: BE1013798369
+          &copy; {currentYear} - &rsquo;t Trimmerke - btw: BE1013798369 - Made By Lukas Carton
         </p>
       </div>
     </footer>

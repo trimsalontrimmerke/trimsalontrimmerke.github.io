@@ -35,7 +35,7 @@ const BackFotos = () => {
   const fetchImages = async (token) => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}fotos/images`, { // Corrected endpoint
+      const response = await fetch(`${API_URL}fotos/images`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`
@@ -73,7 +73,7 @@ const BackFotos = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}fotos/upload`, { // Corrected endpoint
+      const response = await fetch(`${API_URL}fotos/upload`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${userToken}` // Pass the Firebase Auth token
@@ -103,7 +103,7 @@ const BackFotos = () => {
     const filename = fullPath.split('/').pop(); // This gets just the filename part
 
     try {
-      const response = await fetch(`${API_URL}fotos/images/${filename}`, { // Corrected endpoint
+      const response = await fetch(`${API_URL}fotos/images/${filename}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${userToken}` // Pass the Firebase Auth token
@@ -164,7 +164,7 @@ const BackFotos = () => {
                 <div className="BackFotos-image-details">
                   <p className="BackFotos-image-name">{image.name}</p>
                   <button 
-                    onClick={() => handleDelete(image.publicUrl)} 
+                    onClick={() => handleDelete(image.name)} 
                     className="BackFotos-delete-button"
                   >
                     Delete
@@ -177,7 +177,6 @@ const BackFotos = () => {
       </div>
     </div>
   );
-  
 };
 
 export default BackFotos;

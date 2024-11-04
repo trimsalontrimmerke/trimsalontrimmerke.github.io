@@ -29,16 +29,16 @@ function Header() {
           {/* Navbar links */}
           <ul className="ul-header">
             <li className="nav-item li-header">
-              <Link className="navtextHeader" to="/home">Home</Link>
+              <Link className="navtextHeader" to="/home" onClick={toggleMenu}>Home</Link>
             </li>
             <li className="nav-item li-header">
-              <Link className="navtextHeader" to="/regels">Huisregels</Link>
+              <Link className="navtextHeader" to="/regels" onClick={toggleMenu}>Huisregels</Link>
             </li>
             <li className="nav-item li-header">
-              <Link className="navtextHeader" to="/fotos">Foto's</Link>
+              <Link className="navtextHeader" to="/fotos" onClick={toggleMenu}>Foto's</Link>
             </li>
             <li className="nav-item li-header">
-              <Link className="navtextHeader" to="/contact">Contact</Link>
+              <Link className="navtextHeader" to="/contact" onClick={toggleMenu}>Contact</Link>
             </li>
           </ul>
 

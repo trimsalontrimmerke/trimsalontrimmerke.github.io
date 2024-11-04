@@ -62,6 +62,7 @@
 
 .hamburger {
     display: none;
+    margin-left: 5%;
 }
 
 /* Media query for small screens */
