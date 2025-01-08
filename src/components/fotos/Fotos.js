@@ -1,7 +1,7 @@
 // src/components/Fotos.js
-import React, { useState, useEffect } from 'react';
-import './Fotos.css'; // Your CSS styles
-import API_URL from '../../config/config'; // Ensure the path to your config file is correct
+import React, { useState, useEffect } from "react";
+import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
+import "./Fotos.css"; // Your CSS styles
 
 function Fotos() {
   const [photos, setPhotos] = useState([]);
@@ -10,23 +10,28 @@ function Fotos() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Dynamically determine the number of photos per page based on screen width
   function getPhotosPerPage() {
     const screenWidth = window.innerWidth;
     return screenWidth < 576 ? 1 : 6; // Mobile: 1 photo per page, others: 6 photos
   }
 
   const fetchPhotos = async () => {
+    setLoading(true);
     try {
-      const response = await fetch(`${API_URL}fotos/images`); // Adjust API endpoint if needed
-      if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
-      }
-      const data = await response.json();
-      // Reverse the photos array before setting it to state
-      setPhotos(data.reverse().map(photo => photo.publicUrl));
-    } catch (error) {
-      console.error('Error fetching photos:', error);
-      setError(error.message);
+      const storage = getStorage(); // Initialize Firebase Storage
+      const storageRef = ref(storage, "fotos/"); // Path to your 'fotos/' folder in Firebase Storage
+      const response = await listAll(storageRef); // Get all items in the folder
+
+      // Fetch download URLs for each photo
+      const urls = await Promise.all(
+        response.items.map((item) => getDownloadURL(item))
+      );
+
+      setPhotos(urls); 
+    } catch (err) {
+      console.error("Error fetching photos:", err);
+      setError("Failed to load photos. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -36,6 +41,7 @@ function Fotos() {
     fetchPhotos(); // Fetch photos on component mount
   }, []);
 
+  // Handle page changes
   const handlePageChange = (page) => {
     if (page < 1 || page > Math.ceil(photos.length / photosPerPage)) {
       return; // Don't change page if it's out of bounds
@@ -43,11 +49,13 @@ function Fotos() {
     setCurrentPage(page);
   };
 
+  // Determine the photos to display on the current page
   const indexOfLastPhoto = currentPage * photosPerPage;
   const indexOfFirstPhoto = indexOfLastPhoto - photosPerPage;
   const currentPhotos = photos.slice(indexOfFirstPhoto, indexOfLastPhoto);
   const totalPages = Math.ceil(photos.length / photosPerPage);
 
+  // Update the number of photos per page on window resize
   window.onresize = () => {
     const newPhotosPerPage = getPhotosPerPage();
     if (newPhotosPerPage !== photosPerPage) {
@@ -61,7 +69,7 @@ function Fotos() {
       <h1 className="text-center">Foto’s van onze blije klantjes</h1>
 
       {loading && <p>Loading photos...</p>}
-      {error && <p>Error fetching photos: {error}</p>}
+      {error && <p className="error">{error}</p>}
 
       <div className="fotos-grid">
         {currentPhotos.map((photo, index) => (
@@ -70,7 +78,7 @@ function Fotos() {
               src={photo}
               alt={`Photo ${index + 1}`}
               className="fotos-img img-fluid"
-              onError={() => console.error(`Failed to load image: ${photo}`)} // Error handling
+              onError={() => console.error(`Failed to load image: ${photo}`)} // Handle image loading errors
             />
           </div>
         ))}
@@ -79,7 +87,7 @@ function Fotos() {
       {/* Centered Pagination */}
       <nav className="fotos-pagination-container" aria-label="Page navigation">
         <ul className="fotos-pagination justify-content-center">
-          <li className={`fotos-page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+          <li className={`fotos-page-item ${currentPage === 1 ? "disabled" : ""}`}>
             <button
               className="fotos-page-link"
               onClick={() => handlePageChange(currentPage - 1)}
@@ -89,17 +97,26 @@ function Fotos() {
             </button>
           </li>
 
-          {photosPerPage > 1 && (
+          {photosPerPage > 1 &&
             Array.from({ length: totalPages }, (_, index) => (
-              <li className={`fotos-page-item ${currentPage === index + 1 ? 'active' : ''}`} key={index}>
-                <button className="fotos-page-link" onClick={() => handlePageChange(index + 1)}>
+              <li
+                className={`fotos-page-item ${currentPage === index + 1 ? "active" : ""}`}
+                key={index}
+              >
+                <button
+                  className="fotos-page-link"
+                  onClick={() => handlePageChange(index + 1)}
+                >
                   {index + 1}
                 </button>
               </li>
-            ))
-          )}
+            ))}
 
-          <li className={`fotos-page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+          <li
+            className={`fotos-page-item ${
+              currentPage === totalPages ? "disabled" : ""
+            }`}
+          >
             <button
               className="fotos-page-link"
               onClick={() => handlePageChange(currentPage + 1)}

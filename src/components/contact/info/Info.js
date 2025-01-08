@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Info.css'; // Import styles for the Info component
-import API_URL from '../../../config/config'; // Ensure this path is correct
+import { db } from '../../../firebaseConfig'; // Make sure your firebaseConfig is set up correctly
+import { doc, getDoc } from "firebase/firestore"; // Firestore functions to get document
 
 const pinIcon = `${process.env.PUBLIC_URL}/img/pin.png`;
 const phoneIcon = `${process.env.PUBLIC_URL}/img/telephone icon.png`;
@@ -12,20 +13,20 @@ function Info() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Step 2: Fetch the opening hours when the component mounts
+  // Step 2: Fetch the opening hours from Firebase Firestore when the component mounts
   useEffect(() => {
     const fetchOpeningHours = async () => {
       try {
-        const response = await fetch(`${API_URL}openingstijden`);
+        const openingstijdenRef = doc(db, "openingstijden", "weeklyHours"); // Get the 'weeklyHours' document from Firestore
+        const docSnap = await getDoc(openingstijdenRef);
 
-        if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
+        if (docSnap.exists()) {
+          setOpeningHours(docSnap.data());
+        } else {
+          setError("No opening hours found.");
         }
-
-        const data = await response.json();
-        setOpeningHours(data);
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching opening hours:", error);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -75,14 +76,16 @@ function Info() {
               <div>
                 {daysOfWeek.map(day => {
                   const hours = openingHours[day];
-                  if (hours.isClosed) {
+                  if (hours && hours.isClosed) {
                     return <p key={day}>{day.charAt(0).toUpperCase() + day.slice(1)}: Gesloten</p>;
-                  } else {
+                  } else if (hours) {
                     return (
                       <p key={day}>
                         {day.charAt(0).toUpperCase() + day.slice(1)}: {hours.open} - {hours.close}
                       </p>
                     );
+                  } else {
+                    return <p key={day}>{day.charAt(0).toUpperCase() + day.slice(1)}: No data available</p>;
                   }
                 })}
               </div>

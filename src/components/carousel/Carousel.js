@@ -1,89 +1,99 @@
-import React, { useState, useEffect, useRef } from 'react';
-import './Carousel.css'; // Import styles for the carousel component
-import API_URL from '../../config/config'; // Ensure the path to your config file is correct
+import React, { useState, useEffect, useRef } from "react";
+import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
+import "./Carousel.css"; // Import your carousel styles
 
 const Carousel = () => {
-  const [photos, setPhotos] = useState([]); // Store the photos fetched from the API
-  const [photoNumber, setPhotoNumber] = useState(0); // Track the current photo index
+  const [photos, setPhotos] = useState([]); // Store photo URLs
+  const [photoIndex, setPhotoIndex] = useState(0); // Track current photo index
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
-  const autoScrollInterval = useRef(null); // Use ref to hold interval ID
+  const autoScrollInterval = useRef(null); // Ref for auto-scroll interval
 
   useEffect(() => {
-    fetchPhotos(); // Fetch photos on component mount
+    fetchPhotos(); // Fetch photos from Firebase
     startAutoScroll(); // Start auto-scrolling
 
-    // Cleanup on component unmount
-    return () => {
-      stopAutoScroll();
-    };
+    return () => stopAutoScroll(); // Cleanup interval on unmount
   }, []);
 
-  // Fetch photos from the storage API
+  // Fetch photos from Firebase Storage
   const fetchPhotos = async () => {
+    setLoading(true);
     try {
-      const response = await fetch(`${API_URL}carousel/images`); // API endpoint for fetching images
-      if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
-      }
-      const data = await response.json();
-      // Assuming 'data' returns an array of objects containing the publicUrl
-      console.log(data); // Debug log to check the fetched data
-      setPhotos(data.map(photo => photo.publicUrl)); // Extract public URLs from the data
-      setPhotoNumber(0); // Reset photo number to 0 to show the first photo
-    } catch (error) {
-      console.error('Error fetching photos:', error);
-      setError(error.message); // Set the error message state
+      const storage = getStorage(); // Initialize Firebase Storage
+      const storageRef = ref(storage, "carousel/"); // Path to your folder in Storage
+      const response = await listAll(storageRef); // Get all items in the folder
+
+      // Fetch download URLs for each file
+      const urls = await Promise.all(
+        response.items.map((item) => getDownloadURL(item))
+      );
+
+      setPhotos(urls); // Save URLs to state
+      setPhotoIndex(0); // Start from the first photo
+    } catch (err) {
+      setError("Failed to load photos: " + err.message);
     } finally {
-      setLoading(false); // Set loading to false when done
+      setLoading(false);
     }
   };
 
   // Navigate to the next photo
   const nextPhoto = () => {
-    if (photos.length === 0) return; // Prevent updating if no photos
-    setPhotoNumber((prev) => (prev + 1) % photos.length); // Loop back to the first photo
+    setPhotoIndex((prevIndex) => (prevIndex + 1) % photos.length);
   };
 
   // Navigate to the previous photo
   const previousPhoto = () => {
-    if (photos.length === 0) return; // Prevent updating if no photos
-    setPhotoNumber((prev) => (prev - 1 + photos.length) % photos.length); // Loop back to the last photo
+    setPhotoIndex((prevIndex) => (prevIndex - 1 + photos.length) % photos.length);
   };
 
-  // Start the auto-scrolling feature
+  // Start auto-scroll
   const startAutoScroll = () => {
-    autoScrollInterval.current = setInterval(nextPhoto, 5000); // Change photo every 5 seconds
+    stopAutoScroll(); // Prevent multiple intervals
+    autoScrollInterval.current = setInterval(nextPhoto, 5000); // Change every 5 seconds
   };
 
-  // Stop the auto-scrolling feature
+  // Stop auto-scroll
   const stopAutoScroll = () => {
     if (autoScrollInterval.current) {
-      clearInterval(autoScrollInterval.current); // Clear interval to stop auto-scrolling
+      clearInterval(autoScrollInterval.current);
     }
   };
 
   return (
     <div
       className="carousel-container"
-      onMouseEnter={stopAutoScroll} // Stop auto-scroll on hover
+      onMouseEnter={stopAutoScroll} // Pause auto-scroll on hover
       onMouseLeave={startAutoScroll} // Resume auto-scroll on mouse leave
     >
       <div className="carousel-slide">
-        {loading && <p>Loading photos...</p>} {/* Loading message */}
-        {error && <p>Error fetching photos: {error}</p>} {/* Error message */}
+        {loading && <p>Loading photos...</p>} {/* Loading state */}
+        {error && <p className="error">{error}</p>} {/* Error message */}
         {photos.length > 0 ? (
-          <img src={photos[photoNumber]} alt={`photo ${photoNumber}`} /> // Display current photo
-        ) : (
-          <p>No photos available.</p> // Message if no photos are available
-        )}
+          <img
+            src={photos[photoIndex]}
+            alt={`Slide ${photoIndex + 1}`}
+            className="carousel-image"
+          />
+        ) : !loading && <p>No photos available.</p>} {/* No photos message */}
       </div>
 
-      {/* Buttons for manual slide navigation */}
-      <button className="prev" onClick={previousPhoto} disabled={photos.length === 0}>
+      {/* Navigation Buttons */}
+      <button
+        className="prev"
+        onClick={previousPhoto}
+        disabled={photos.length === 0}
+        aria-label="Previous photo"
+      >
         &#10094;
       </button>
-      <button className="next" onClick={nextPhoto} disabled={photos.length === 0}>
+      <button
+        className="next"
+        onClick={nextPhoto}
+        disabled={photos.length === 0}
+        aria-label="Next photo"
+      >
         &#10095;
       </button>
     </div>

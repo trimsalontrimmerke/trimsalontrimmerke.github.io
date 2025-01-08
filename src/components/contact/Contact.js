@@ -2,7 +2,7 @@ import React, {useEffect}from 'react';
 import './Contact.css';  // Import styles for the Alert component
 import Mededeling from './mededeling/Mededeling';
 import Info from './info/Info';
-import Form from './form/form';
+import Form from './form/Form';
 
 
 function Contact() {

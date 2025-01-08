@@ -1,55 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import API_URL from '../../../config/config'; // Ensure the path to your config file is correct
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject, listAll } from 'firebase/storage';
 import './BackCarousel.css'; // Import CSS for styling
 import BackNav from '../nav/BackNav';
+import useAuth from '../../../hooks/useAuth';  // Import the custom hook
 
 const BackCarousel = () => {
-    const [images, setImages] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
-    const [userToken, setUserToken] = useState(null);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [images, setImages] = useState([]); // Stores the list of carousel images
+    const [loading, setLoading] = useState(true); // Controls loading state
+    const [errorMessage, setErrorMessage] = useState(''); // Stores error messages
+    const [successMessage, setSuccessMessage] = useState(''); // Stores success messages
+    const [selectedFile, setSelectedFile] = useState(null); // Holds the selected file for upload
 
-    const auth = getAuth();
+    const { isLoggedIn, loading: authLoading, errorMessage: authError } = useAuth(); // Use the custom hook
+    const storage = getStorage(); // Firebase storage reference
 
-    // Check if user is logged in
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const token = await user.getIdToken();
-                setUserToken(token);
-                setIsLoggedIn(true);
-                fetchImages(token); // Fetch images when logged in
-            } else {
-                setIsLoggedIn(false);
-            }
-        });
+        if (isLoggedIn) {
+            fetchImages(); // Fetch images from Firebase Storage if logged in
+        }
+    }, [isLoggedIn]);
 
-        return () => unsubscribe();
-    }, [auth]);
-
-    // Fetch images from the backend
-    const fetchImages = async (token) => {
+    // Fetch images from Firebase Storage
+    const fetchImages = async () => {
         setLoading(true);
+        const storageRef = ref(storage, 'carousel/'); // Reference to 'carousel' folder in Firebase Storage
+
         try {
-            const response = await fetch(`${API_URL}carousel/images`, {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch images');
-            }
-
-            const data = await response.json();
-            setImages(data); // Set fetched images
+            const imageRefs = await listAll(storageRef); // List all images in the 'carousel' folder
+            const imageUrls = await Promise.all(
+                imageRefs.items.map(async (imageRef) => {
+                    const url = await getDownloadURL(imageRef); // Get the download URL for each image
+                    return {
+                        name: imageRef.name,
+                        publicUrl: url,
+                    };
+                })
+            );
+            setImages(imageUrls); // Set the image URLs in state
         } catch (error) {
-            setErrorMessage('Error fetching images.');
+            setErrorMessage('Error fetching images from Firebase.');
         } finally {
             setLoading(false);
         }
@@ -60,34 +49,21 @@ const BackCarousel = () => {
         setSelectedFile(event.target.files[0]);
     };
 
-    // Upload selected image
+    // Upload selected image to Firebase Storage
     const handleUpload = async () => {
         if (!selectedFile) {
             setErrorMessage('Please select a file to upload.');
             return;
         }
 
-        const formData = new FormData();
-        formData.append('image', selectedFile);
+        const storageRef = ref(storage, `carousel/${selectedFile.name}`); // Reference to the file in Firebase Storage
 
         setLoading(true);
         try {
-            const response = await fetch(`${API_URL}carousel/upload`, {
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${userToken}`
-                },
-                body: formData
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to upload image');
-            }
-
-            const result = await response.json();
-            setSuccessMessage(result.message);
-            setSelectedFile(null); // Reset the selected file
-            fetchImages(userToken); // Refresh the images list
+            await uploadBytes(storageRef, selectedFile); // Upload file to Firebase
+            setSuccessMessage('Image uploaded successfully.');
+            fetchImages(); // Refresh the images list
+            setSelectedFile(null); // Reset file input after successful upload
         } catch (error) {
             setErrorMessage('Error uploading image.');
         } finally {
@@ -95,30 +71,25 @@ const BackCarousel = () => {
         }
     };
 
-    // Delete an image
+    // Delete image from Firebase Storage
     const handleDelete = async (filename) => {
         setLoading(true);
-        const name = filename.split('/').pop();
+        const imageRef = ref(storage, `carousel/${filename}`); // Reference to the image in Firebase Storage
+
         try {
-            const response = await fetch(`${API_URL}carousel/images/${name}`, {
-                method: 'DELETE',
-                headers: {
-                    Authorization: `Bearer ${userToken}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to delete image');
-            }
-
+            await deleteObject(imageRef); // Delete the image from Firebase
             setSuccessMessage('Image deleted successfully!');
-            fetchImages(userToken); // Refresh the images list
+            fetchImages(); // Refresh the images list
         } catch (error) {
             setErrorMessage('Error deleting image.');
         } finally {
             setLoading(false);
         }
     };
+
+    if (authLoading) {
+        return <p className="loading-message">Loading authentication...</p>;
+    }
 
     if (!isLoggedIn) {
         return <p className="warning-message">Please log in to manage carousel images.</p>;
@@ -152,7 +123,7 @@ const BackCarousel = () => {
                         <p>No images uploaded.</p>
                     ) : (
                         images.map((image) => (
-                            <div key={image.publicUrl} className="BackCarousel-image-item">
+                            <div key={image.name} className="BackCarousel-image-item">
                                 <img
                                     src={image.publicUrl}
                                     alt={image.name}

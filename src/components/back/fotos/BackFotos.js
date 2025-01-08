@@ -1,54 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import API_URL from '../../../config/config'; // Ensure the path to your config file is correct
+import { getStorage, ref, uploadBytes, listAll, deleteObject, getDownloadURL } from 'firebase/storage'; // Firebase Storage imports
 import './BackFotos.css'; // Import CSS for styling
 import BackNav from '../nav/BackNav';
+import useAuth from '../../../hooks/useAuth';  // Import the custom hook
 
 const BackFotos = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [userToken, setUserToken] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
 
-  const auth = getAuth();
+  const { userToken, isLoggedIn, loading: authLoading, errorMessage: authError } = useAuth(); // Use the custom hook
+  const storage = getStorage(); // Initialize Firebase Storage
 
-  // Check if user is logged in
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const token = await user.getIdToken();
-        setUserToken(token);
-        setIsLoggedIn(true);
-        fetchImages(token); // Fetch images when logged in
-      } else {
-        setIsLoggedIn(false);
-      }
-    });
+    if (isLoggedIn) {
+      fetchImages(); // Fetch images if logged in
+    }
+  }, [isLoggedIn]);
 
-    return () => unsubscribe();
-  }, [auth]);
-
-  // Fetch images from the backend
-  const fetchImages = async (token) => {
+  // Fetch images from Firebase Storage
+  const fetchImages = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}fotos/images`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const storageRef = ref(storage, 'fotos/');
+      const result = await listAll(storageRef); // List all files in the "fotos" folder
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch images');
-      }
+      const imageUrls = await Promise.all(
+        result.items.map(async (imageRef) => {
+          const url = await getDownloadURL(imageRef); // Get the URL for each image
+          return { name: imageRef.name, publicUrl: url };
+        })
+      );
 
-      const data = await response.json();
-      // Reverse the images array to show the last uploaded picture first
-      setImages(data);
+      setImages(imageUrls.reverse()); // Display images in reverse order (latest first)
     } catch (error) {
       setErrorMessage('Error fetching images.');
     } finally {
@@ -56,39 +42,26 @@ const BackFotos = () => {
     }
   };
 
-  // Handle file selection
+  // Handle file selection for upload
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
   };
 
-  // Upload selected image
+  // Upload selected image to Firebase Storage
   const handleUpload = async () => {
     if (!selectedFile) {
       setErrorMessage('Please select a file to upload.');
       return;
     }
 
-    const formData = new FormData();
-    formData.append('image', selectedFile);
-
+    const fileRef = ref(storage, `fotos/${selectedFile.name}`);
     setLoading(true);
+
     try {
-      const response = await fetch(`${API_URL}fotos/upload`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${userToken}` // Pass the Firebase Auth token
-        },
-        body: formData // Send the file data
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to upload image');
-      }
-
-      const result = await response.json();
-      setSuccessMessage(result.message);
-      setSelectedFile(null); // Reset the selected file
-      fetchImages(userToken); // Refresh the images list
+      await uploadBytes(fileRef, selectedFile); // Upload file to Firebase Storage
+      setSuccessMessage('Image uploaded successfully!');
+      setSelectedFile(null); // Reset selected file
+      fetchImages(); // Refresh image list
     } catch (error) {
       setErrorMessage('Error uploading image.');
     } finally {
@@ -96,32 +69,25 @@ const BackFotos = () => {
     }
   };
 
-  // Delete an image
-  const handleDelete = async (fullPath) => {
+  // Delete image from Firebase Storage
+  const handleDelete = async (filename) => {
     setLoading(true);
-    // Extract filename from the full path
-    const filename = fullPath.split('/').pop(); // This gets just the filename part
+    const fileRef = ref(storage, `fotos/${filename}`);
 
     try {
-      const response = await fetch(`${API_URL}fotos/images/${filename}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${userToken}` // Pass the Firebase Auth token
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete image');
-      }
-
+      await deleteObject(fileRef); // Delete file from Firebase Storage
       setSuccessMessage('Image deleted successfully!');
-      fetchImages(userToken); // Refresh the images list
+      fetchImages(); // Refresh image list
     } catch (error) {
       setErrorMessage('Error deleting image.');
     } finally {
       setLoading(false);
     }
   };
+
+  if (authLoading) {
+    return <p className="loading-message">Loading authentication...</p>;
+  }
 
   if (!isLoggedIn) {
     return <p className="warning-message">Please log in to manage photos.</p>;
@@ -138,7 +104,7 @@ const BackFotos = () => {
         <h2>Admin - Manage Photos</h2>
         {successMessage && <p className="BackFotos-success-message">{successMessage}</p>}
         {errorMessage && <p className="BackFotos-error-message">{errorMessage}</p>}
-  
+
         <div className="BackFotos-upload-section">
           <input 
             type="file" 
@@ -148,7 +114,7 @@ const BackFotos = () => {
           />
           <button onClick={handleUpload} className="BackFotos-upload-button">Upload Image</button>
         </div>
-  
+
         <h3>Uploaded Images</h3>
         <div className="BackFotos-image-list">
           {images.length === 0 ? (

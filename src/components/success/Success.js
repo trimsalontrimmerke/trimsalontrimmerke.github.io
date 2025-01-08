@@ -1,6 +1,6 @@
 // src/components/success/Success.js
 import React from 'react';
-import './success.css'; // Import the CSS for this component
+import './Success.css'; // Import the CSS for this component
 
 const Success = () => {
   const backgroundStyle = {
