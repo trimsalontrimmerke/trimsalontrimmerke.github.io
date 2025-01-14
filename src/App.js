@@ -28,7 +28,7 @@ function App() {
               element={
                 <>
                   <Helmet>
-                    <title>Hondensalon in Beselare | Professionele Hondenverzorging</title>
+                    <title>trimsalon &rsquo;t trimmerke</title>
                     <meta
                       name="description"
                       content="Welkom bij Trimsalon 't trimmerke , het professionele hondensalon in Beselare. Wij bieden hondenverzorging, knippen, trimmen en hondenbaden."
@@ -84,7 +84,7 @@ function App() {
               element={
                 <>
                   <Helmet>
-                    <title>Contact trimsalon &rsquo;t trimmerke | Hondenverzorging</title>
+                    <title>trimsalon &rsquo;t trimmerke - Contact </title>
                     <meta
                       name="description"
                       content="Neem contact op met trimsalon &rsquo;t trimmerke voor meer informatie over onze hondenverzorging diensten of maak een afspraak."
@@ -102,7 +102,7 @@ function App() {
               element={
                 <>
                   <Helmet>
-                    <title>Succes! | Hondenverzorging bij trimsalon &rsquo;t trimmerke</title>
+                    <title>trimsalon &rsquo;t trimmerke - Success</title>
                     <meta
                       name="description"
                       content="Bedankt voor uw vraag"
@@ -121,7 +121,23 @@ function App() {
             <Route path="/back/carousel" element={<BackCarousel />} />
 
             {/* Catch-All Route */}
-            <Route path="*" element={<Home />} />
+            <Route path="*"element={
+                <>
+                  <Helmet>
+                    <title>trimsalon &rsquo;t trimmerke</title>
+                    <meta
+                      name="description"
+                      content="Welkom bij Trimsalon 't trimmerke , het professionele hondensalon in Beselare. Wij bieden hondenverzorging, knippen, trimmen en hondenbaden."
+                    />
+                    <meta
+                      name="keywords"
+                      content="hondensalon, trimsalon , trimsalon beselare , hondenkapper, hondenverzorging, hondenbaden, hondensalon in beselare, hondenharen knippen"
+                    />
+                    <meta name="robots" content="index, follow" />
+                  </Helmet>
+                  <Home />
+                </>
+              } />
           </Routes>
         </div>
         <Footer />
