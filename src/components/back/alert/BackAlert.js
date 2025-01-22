@@ -15,6 +15,11 @@ const BackAlert = () => {
 
   const { isLoggedIn, loading: authLoading, errorMessage: authError } = useAuth(); // Use the custom hook
 
+   useEffect(() => {
+          if (isLoggedIn) {
+              fetchAlertData(); 
+          }
+      }, [isLoggedIn]);
   // Fetch the current alert from Firestore
   const fetchAlertData = async () => {
     setErrorMessage("");
