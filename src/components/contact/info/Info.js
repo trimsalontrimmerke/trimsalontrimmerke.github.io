@@ -64,7 +64,7 @@ function Info() {
           </div>
           <div className="left-item left-item-last">
             <p><img src={envelopeIcon} alt="envelope icon" className="icon" /></p>
-            <a href="mailto:trimmerke@outlook.com" className="phone-link">trimmerke&#64;outlook.com</a>
+            <a href="mailto:info@trimsalontrimmerke.be" className="phone-link">info&#64;trimsalontrimmerke.be</a>
           </div>
         </div>
         <div className="right-column">
