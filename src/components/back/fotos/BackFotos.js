@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getStorage, ref, uploadBytes, listAll, deleteObject, getDownloadURL } from 'firebase/storage'; // Firebase Storage imports
+import { collection, query, orderBy, getDocs, addDoc, serverTimestamp,  where, deleteDoc, doc} from "firebase/firestore";
+import { db, storage } from "../../../firebaseConfig";
 import './BackFotos.css'; // Import CSS for styling
 import BackNav from '../nav/BackNav';
 import useAuth from '../../../hooks/useAuth';  // Import the custom hook
@@ -21,65 +23,98 @@ const BackFotos = () => {
   }, [isLoggedIn]);
 
   // Fetch images from Firebase Storage
-  const fetchImages = async () => {
-    setLoading(true);
-    try {
-      const storageRef = ref(storage, 'fotos/');
-      const result = await listAll(storageRef); // List all files in the "fotos" folder
+  // Fetch images from Firestore and Firebase Storage
+const fetchImages = async () => {
+  setLoading(true);
+  try {
+ 
+    // Query Firestore for metadata
+    const firestoreCollection = collection(db, "images"); // Use `db` here
+   
+    const q = query(firestoreCollection, orderBy("uploadTime", "desc")); // Order by upload time
+    const querySnapshot = await getDocs(q);
 
-      const imageUrls = await Promise.all(
-        result.items.map(async (imageRef) => {
-          const url = await getDownloadURL(imageRef); // Get the URL for each image
-          return { name: imageRef.name, publicUrl: url };
-        })
-      );
+    // Fetch download URLs from Firebase Storage
+    const imageUrls = await Promise.all(
+      querySnapshot.docs.map(async (doc) => {
+        const data = doc.data();
+        const url = await getDownloadURL(ref(storage, data.path)); // Use `storage` here
+        return { name: data.name, publicUrl: url, uploadTime: data.uploadTime.toDate() }; // Include upload time
+      })
+    );
 
-      setImages(imageUrls.reverse()); // Display images in reverse order (latest first)
-    } catch (error) {
-      setErrorMessage('Error fetching images.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    setImages(imageUrls);
+  } catch (error) {
+    setErrorMessage("Error fetching images.");
+    console.error("Fetch error:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Handle file selection for upload
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
   };
 
-  // Upload selected image to Firebase Storage
   const handleUpload = async () => {
     if (!selectedFile) {
-      setErrorMessage('Please select a file to upload.');
+      setErrorMessage("Please select a file to upload.");
       return;
     }
-
+  
     const fileRef = ref(storage, `fotos/${selectedFile.name}`);
     setLoading(true);
-
+  
     try {
-      await uploadBytes(fileRef, selectedFile); // Upload file to Firebase Storage
-      setSuccessMessage('Image uploaded successfully!');
+      // Step 1: Upload file to Firebase Storage
+      await uploadBytes(fileRef, selectedFile);
+  
+      // Step 2: Save metadata in Firestore with a timestamp
+      const firestoreCollection = collection(db, "images"); // Use `db` for Firestore
+      await addDoc(firestoreCollection, {
+        name: selectedFile.name, // File name
+        path: `fotos/${selectedFile.name}`, // File path in storage
+        uploadTime: serverTimestamp() // Timestamp for upload time
+      });
+  
+      // Step 3: Notify the user and reset the state
+      setSuccessMessage("Image uploaded successfully!");
       setSelectedFile(null); // Reset selected file
       fetchImages(); // Refresh image list
     } catch (error) {
-      setErrorMessage('Error uploading image.');
+      setErrorMessage("Error uploading image.");
+      console.error("Upload error:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  // Delete image from Firebase Storage
   const handleDelete = async (filename) => {
     setLoading(true);
     const fileRef = ref(storage, `fotos/${filename}`);
-
+  
     try {
-      await deleteObject(fileRef); // Delete file from Firebase Storage
-      setSuccessMessage('Image deleted successfully!');
+      // Step 1: Delete file from Firebase Storage
+      await deleteObject(fileRef);
+  
+      // Step 2: Find and delete metadata from Firestore
+      const firestoreCollection = collection(db, "images");
+      const q = query(firestoreCollection, where("name", "==", filename)); // Query Firestore for the file's metadata
+      const querySnapshot = await getDocs(q);
+  
+      // Delete all matching documents (should ideally only be one document)
+      const deletePromises = querySnapshot.docs.map((docSnapshot) =>
+        deleteDoc(doc(db, "images", docSnapshot.id))
+      );
+      await Promise.all(deletePromises);
+  
+      // Step 3: Notify the user and refresh the image list
+      setSuccessMessage("Image deleted successfully!");
       fetchImages(); // Refresh image list
     } catch (error) {
-      setErrorMessage('Error deleting image.');
+      setErrorMessage("Error deleting image.");
+      console.error("Delete error:", error);
     } finally {
       setLoading(false);
     }

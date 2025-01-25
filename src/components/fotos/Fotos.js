@@ -1,6 +1,8 @@
 // src/components/Fotos.js
 import React, { useState, useEffect } from "react";
 import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
+import { collection, query, orderBy, getDocs } from "firebase/firestore";
+import {db , storage} from '../../firebaseConfig'
 import "./Fotos.css"; // Your CSS styles
 
 function Fotos() {
@@ -19,16 +21,23 @@ function Fotos() {
   const fetchPhotos = async () => {
     setLoading(true);
     try {
-      const storage = getStorage(); // Initialize Firebase Storage
-      const storageRef = ref(storage, "fotos/"); // Path to your 'fotos/' folder in Firebase Storage
-      const response = await listAll(storageRef); // Get all items in the folder
-
-      // Fetch download URLs for each photo
+      // Step 1: Fetch metadata from Firestore, ordered by upload time
+      const firestoreCollection = collection(db, "images");
+      const q = query(firestoreCollection, orderBy("uploadTime", "desc")); // Order by upload time, newest first
+      const querySnapshot = await getDocs(q);
+  
+      // Step 2: Fetch download URLs for each image
       const urls = await Promise.all(
-        response.items.map((item) => getDownloadURL(item))
+        querySnapshot.docs.map(async (doc) => {
+          const data = doc.data();
+          const url = await getDownloadURL(ref(storage, data.path)); // Get the URL for the image from Firebase Storage
+          return url;
+        })
       );
-
-      setPhotos(urls); 
+  
+      // Step 3: Set the sorted URLs
+      setPhotos(urls); // Set the array of image URLs
+  
     } catch (err) {
       console.error("Error fetching photos:", err);
       setError("Failed to load photos. Please try again later.");
