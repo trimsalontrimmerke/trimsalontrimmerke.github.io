@@ -1,58 +1,99 @@
-// src/components/Header/Header.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './Header.css'; // Importing the corresponding CSS file
+import { MenuOutlined } from '@ant-design/icons';
+import './Header.css';
 
 function Header() {
-  // State to handle menu toggle
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  // Toggle function for the hamburger menu
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setMenuOpen(!menuOpen);
   };
 
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    document.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      document.removeEventListener('scroll', handleScroll);
+    };
+  }, [scrolled]);
+
   return (
-    <header>
-      <nav className="navbar">
-        <div className={`navcontainerHeader ${isMenuOpen ? 'active' : ''}`}>
-          {/* Logo */}
-          <Link to="/home">
-            <img className="logo" src={`${process.env.PUBLIC_URL}/img/logo.jpg`} alt="Logo" />
+    <header className={`header-container ${scrolled ? 'scrolled' : ''}`}>
+      <div className="navbar-content">
+        {/* Logo - Left side */}
+        <Link to="/home" className="logo-link" onClick={closeMenu}>
+          <img 
+            className="logo" 
+            src={`${process.env.PUBLIC_URL}/img/logo.jpg`} 
+            alt="Trimsalon Logo" 
+          />
+        </Link>
+
+        {/* Mobile menu button */}
+        <button 
+          className="mobile-menu-button" 
+          onClick={toggleMenu}
+          aria-label="Toggle menu"
+        >
+          <MenuOutlined />
+        </button>
+
+        {/* Navigation links - Centered */}
+        <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
+          <Link className="nav-link" to="/home" onClick={closeMenu}>
+            Home
           </Link>
-
-          {/* Hamburger icon (for small screens) */}
-          <div className="hamburger" onClick={toggleMenu}>
-            &#9776; {/* Hamburger icon */}
-          </div>
-
-          {/* Navbar links */}
-          <ul className="ul-header">
-            <li className="nav-item li-header">
-              <Link className="navtextHeader" to="/home" onClick={toggleMenu}>Home</Link>
-            </li>
-            <li className="nav-item li-header">
-              <Link className="navtextHeader" to="/regels" onClick={toggleMenu}>Huisregels</Link>
-            </li>
-            <li className="nav-item li-header">
-              <Link className="navtextHeader" to="/fotos" onClick={toggleMenu}>Foto's</Link>
-            </li>
-            <li className="nav-item li-header">
-              <Link className="navtextHeader" to="/contact" onClick={toggleMenu}>Contact</Link>
-            </li>
-          </ul>
-
-          {/* Right-side social media links */}
-          <div className="right-side-items">
-            <a href="https://www.facebook.com/profile.php?id=61565857696098" className="nav-link" target="_blank" rel="noreferrer">
-              <img src={`${process.env.PUBLIC_URL}/img/facebook.png`} alt="Facebook" />
-            </a>
-            <a href="https://www.instagram.com/trimsalon_t_trimmerke/" className="nav-link" target="_blank" rel="noreferrer">
-              <img src={`${process.env.PUBLIC_URL}/img/insta.png`} alt="Instagram" />
-            </a>
-          </div>
+          <Link className="nav-link" to="/regels" onClick={closeMenu}>
+            Huisregels
+          </Link>
+          <Link className="nav-link" to="/fotos" onClick={closeMenu}>
+            Foto's
+          </Link>
+          <Link className="nav-link" to="/contact" onClick={closeMenu}>
+            Contact
+          </Link>
         </div>
-      </nav>
+
+        {/* Social icons - Right side */}
+        <div className="social-icons">
+          <a 
+            href="https://www.facebook.com/profile.php?id=61565857696098" 
+            target="_blank" 
+            rel="noreferrer"
+            aria-label="Facebook"
+          >
+            <img 
+              className="social-icon" 
+              src={`${process.env.PUBLIC_URL}/img/facebook.png`} 
+              alt="Facebook" 
+            />
+          </a>
+          <a 
+            href="https://www.instagram.com/trimsalon_t_trimmerke/" 
+            target="_blank" 
+            rel="noreferrer"
+            aria-label="Instagram"
+          >
+            <img 
+              className="social-icon" 
+              src={`${process.env.PUBLIC_URL}/img/insta.png`} 
+              alt="Instagram" 
+            />
+          </a>
+        </div>
+      </div>
     </header>
   );
 }

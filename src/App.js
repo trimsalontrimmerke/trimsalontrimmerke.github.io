@@ -14,10 +14,12 @@ import BackOpeningHours from './components/back/openingsuren/BackOpening';
 import BackFotos from './components/back/fotos/BackFotos';
 import BackCarousel from './components/back/carousel/BackCarousel';
 import './App.css'; // Zorg ervoor dat je je CSS goed importeert
+import ScrollToTop from './ScrollToTop';
 
 function App() {
   return (
     <Router basename="/">
+       <ScrollToTop /> 
       <div className="app-container">
         <Header />
         <div className="content">

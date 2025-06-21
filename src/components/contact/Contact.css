@@ -1,17 +1,18 @@
-body{
-    margin: 0%;
+.modern-contact-layout {
+  min-height: 100vh;
+  background-attachment: fixed;
 }
-.background-container-contact {
-    width: 100%;           /* Full width of the viewport */
-    min-height: 100vh;     /* Ensure it grows if content is larger than the viewport */
-    margin: 0 auto;        /* Center the container horizontally, applying equal margins on both sides */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    box-sizing: border-box; /* Ensures padding is part of the container's width */
-    overflow-y: auto;      /* Enable vertical scrolling if content is too large */
-    display: flex;
-    flex-direction: column; /* Stack children vertically */
-    justify-content: center; /* Center content vertically */
-    align-items: stretch; /* Stretch content horizontally to fill */
+
+.contact-content {
+  padding: 32px 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .contact-content {
+    padding: 20px 16px;
+    max-width: 100%;
+  }
 }

@@ -1,83 +1,69 @@
+#about {
+  padding: 80px 20px;
+  background-color: #ddf2fb;
+}
+
 .content-container {
-    display: flex; /* Flexbox layout */
-    justify-content: space-between; /* Space between sections */
-    align-items: stretch; /* Stretch sections to the same height */
-    padding: 10px; /* Padding around content */
-    flex-wrap: wrap; /* Allow sections to wrap on smaller screens */
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Style for each section */
 .section {
-    display: flex; /* Flexbox layout for centering content */
-    flex-direction: column; /* Stack children vertically */
-    justify-content: center; /* Center content vertically */
-    align-items: center; /* Center content horizontally */
-    width: 45%; /* Adjust width as needed */
-    padding: 20px; /* Padding around each section */
-    box-sizing: border-box; /* Include padding in width calculation */
-    background-color: rgba(255, 255, 255, 0.8); /* Optional: background color for better visibility */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 48%;
 }
 
-.left-section{
-    padding-right: 0px ;
-    padding-left: 50px;
-}
-
-/* Additional styling for text and images within sections */
-.left-section h2,
-.left-section p,
-.right-section img {
-    margin: 0; /* Remove default margins */
-}
 .section h2 {
-    font-size: 2rem; /* Font size for larger screens */
-    color: rgb(0, 107, 204); /* Color matching your theme */
-    margin-bottom: 10px; /* Space below the heading */
-    text-align: center; /* Center align the heading text */
-    font-weight: bold; /* Make the text bold */
-}
-.textmarie {
-    text-align: left; /* This ensures all <p> elements are aligned to the left */
-    margin: 0 0 10px 0; /* Optional: add space below each paragraph */
-    line-height: 1.6; /* Optional: improve readability with line-height */
-    
-}
-.pOver{
-    width: 100%;
-    font-family: Calibri;
-    line-height: 1.5;
-    text-align: left; 
-    padding-bottom: 1%;
+  font-size: 2.5rem;
+  color: #1890ff;
+  margin-bottom: 20px;
+  font-weight: 600;
 }
 
-
+.pOver {
+  font-family: 'Calibri', sans-serif;
+  line-height: 1.8;
+  text-align: left;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  color: #333;
+}
 
 .right-section img {
-    max-width: 100%; /* Ensure the image is responsive */
-    height: auto; /* Maintain aspect ratio */
-    max-height: 100%; /* Ensure image doesn't exceed container height */
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 @media (max-width: 768px) {
-    .content-container {
-        flex-direction: column; /* Stack sections vertically on smaller screens */
-        align-items: center; /* Center content horizontally */
-    }
-
-    .section {
-        width: 100%; /* Full width on small screens */
-        padding: 10px; /* Reduce padding on smaller screens */
-    }
-        .section h2 {
-            font-size: 1.5rem; /* Smaller font size for smaller screens */
-            margin-bottom: 8px; /* Reduced space below heading on smaller screens */
-        }
-        .textmarie{
-            margin: 0;
-        }
-
-        .left-section{
-            padding-left : 2%;
-            padding-right: 2%;
-        }
-
+  #about {
+    padding: 40px 15px;
+  }
+  
+  .content-container {
+    flex-direction: column;
+    padding: 20px;
+  }
+  
+  .section {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+  
+  .section h2 {
+    font-size: 2rem;
+  }
+  
+  .right-section img {
+    margin-top: 20px;
+  }
 }

@@ -1,29 +1,45 @@
-import React, {useEffect}from 'react';
-import './Contact.css';  // Import styles for the Alert component
+import React, { useEffect } from 'react';
+import { Layout } from 'antd';
 import Mededeling from './mededeling/Mededeling';
 import Info from './info/Info';
 import Form from './form/Form';
+import './Contact.css';
 
+const { Content } = Layout;
 
 function Contact() {
   useEffect(() => {
-    // Update the page title dynamically
-    document.title = "Contact"; // Set your desired title here
-  }, []); 
-    const backgroundImage = `${process.env.PUBLIC_URL}/img/Achtergrond2.jpg`;
+    document.title = "Contact | Trimsalon Trimmerke";
+     if (window.location.hash === '#formulier') {
+      const formElement = document.getElementById('formulier');
+      if (formElement) {
+        formElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, []);
+
+  const backgroundStyle = {
+    backgroundImage: `linear-gradient(rgba(255,255,255,0.2)), url(${process.env.PUBLIC_URL}/img/Achtergrond2.jpg)`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center center',
+    backgroundAttachment: 'fixed',
+    backgroundRepeat: 'no-repeat'
+  };
+
   return (
-   
-    <div
-    className="background-container-contact"
-    style={{ backgroundImage: `url(${backgroundImage})` }}
-
-  >
-    <Mededeling />
-    <Info /> 
-    <Form />
-    </div>
-
-
+    <Layout 
+      className="modern-contact-layout" 
+      style={backgroundStyle}
+    >
+      <Content className="contact-content">
+        <Mededeling />
+        <Info />
+           <div id="formulier">
+            <Form />
+           </div>
+      
+      </Content>
+    </Layout>
   );
 }
 

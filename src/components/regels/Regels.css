@@ -1,88 +1,46 @@
-/* Existing styles remain the same */
-
 .background-container {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    min-height: 100vh;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    width: 100%;
+    padding: 24px;
 }
 
-.regels-container {
-    padding: 20px;
-    background-color: rgba(59, 203, 255, 0.7);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-    color: white;
-    font-size: 1.2rem;
-    text-align: center;
-    width: 80%; /* Adjust width as needed */
-    margin-top:10px;
-    margin-bottom: 10px;
+.rules-card {
+    background-color: rgba(255, 255, 255, 0.85) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    width: 80%;
+    max-width: 1000px;
+    padding: 24px;
 }
 
-.lijst-regels {
-    list-style: none; /* Remove default bullet points */
-    padding: 0; /* Remove default padding */
-    margin: 0; /* Remove default margin */
-    display: block; /* Ensure the list is displayed as a block element */
+.rules-list .ant-list-item {
+    padding-left: 0;
+    border-bottom: none !important;
+    padding: 12px 0 !important;
+    align-items: flex-start !important;
 }
 
-    .lijst-regels li {
-        padding-left: 30px; /* Adjust spacing to make room for the image */
-        margin-bottom: 20px; /* Space between items, adjust as needed */
-        display: block; /* Ensure list items are block-level elements */
-        text-align: left; /* Ensure text is aligned to the left */
-        position: relative; /* Needed for the icon positioning in the media query */
+.paw-icon {
+    width: 24px;
+    height: 24px;
+    background: url('./hondepootje icon.png') no-repeat center center;
+    background-size: contain;
+    margin-right: 16px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .rules-card {
+        width: 95% !important;
     }
-
-        .lijst-regels li::before {
-            content: ""; /* Clear any existing content */
-            display: block; /* Ensure it is displayed as a block element */
-            width: 20px; /* Set the width of the icon */
-            height: 20px; /* Set the height of the icon */
-            background: url('hondepootje icon.png') no-repeat center center; /* Add the icon image */
-            background-size: 20px 20px; /* Set the size of the icon */
-            position: absolute; /* Position it absolutely within the list item */
-            top: 0; /* Align to the top */
-            left: 0; /* Align to the left */
-            
-        }
-
-        .lijst-regels li p {
-            margin: 0;
-            padding: 0; /* Ensure there is no extra padding */
-            display: inline; /* Ensure text and icon are on the same line */
-            vertical-align: middle; /* Align text vertically with the icon */
-            font-size: 1.2rem;
-        }
-
-/* Media query for small screens */
-@media (max-width: 600px) {
-    .lijst-regels li {
-        background: none; /* Remove the background image */
-        padding-left: 0; /* Remove padding */
-        padding-bottom: 40px; /* Increase space for the icon */
+    
+    .rules-list .ant-list-item {
+        padding: 8px 0 !important;
     }
-
-        .lijst-regels li::before {
-            content: ""; /* Clear any existing content */
-            display: block; /* Ensure it is displayed as a block element */
-            width: 20px; /* Set the width of the icon */
-            height: 20px; /* Set the height of the icon */
-            background: url('./hondepootje icon.png') no-repeat center center; /* Add the icon image */
-            background-size: 20px 20px; /* Set the size of the icon */
-            position: absolute; /* Position it absolutely within the list item */
-            top: 0; /* Align to the top */
-            left: 0; /* Align to the left */
-        }
-
-        .lijst-regels li p {
-            margin-left: 30px; /* Adjust margin to make space for the icon */
-            display: block; /* Ensure the text is displayed as a block element */
-            margin-top: 30px; /* Add space above the text if needed */
-        }
 }

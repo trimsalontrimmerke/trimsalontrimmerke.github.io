@@ -1,154 +1,129 @@
-
-.containerform {
-    max-width: 800px; /* Adjust as needed */
-    width: 90%; /* Full width */
-    padding-top: 20px;
-    padding-left: 5%;
-    padding-right: 5%;
-    margin: 20px auto 20px; /* Center horizontally */
-    background-color: rgba(59, 203, 255, 0.7);
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    margin-bottom: 20px;
-
+.modern-form-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 24px 0;
 }
 
-    .containerform form {
-        padding: 30px 0;
-    }
-
-.form-row {
-    display: flex;
-    flex-wrap: wrap; /* Allow items to wrap to the next line if necessary */
-    gap: 20px; /* Space between columns */
-    margin-bottom: 20px; /* Space between rows */
+.form-card {
+  border-radius: 16px;
+  background: rgb(195, 230, 254);;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+  border: none;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.input-data {
-    position: relative;
-    flex: 1;
-    min-width: 200px; /* Minimum width for input fields */
-    margin-bottom: 20px; /* Space below each input */
+.form-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: #3b82f6;
 }
 
-    .input-data input,
-    .textarea textarea {
-        display: block;
-        width: 100%;
-        border: none;
-        font-size: 17px;
-        border-bottom: 2px solid rgba(0, 0, 0, 0.1); /* More transparent border */
-        padding: 10px;
-        box-sizing: border-box;
-        background: rgba(255, 255, 255, 0.3); /* More transparent background for input fields */
-        border-radius: 5px; /* Rounded corners for input fields */
-    }
-
-.textarea textarea {
-    resize: vertical;
-    padding-top: 30px; /* Increase padding-top for larger labels */
+.form-title {
+  text-align: center;
+  color: #1e40af;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 1.75rem;
 }
 
-.input-data label {
-    position: absolute;
-    top: 0;
-    left: 10px;
-    font-size: 20px; /* Increase the font size for labels */
-    color: rgba(0, 0, 0, 0.3); /* More transparent label color */
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.2); /* More transparent background for labels */
-    padding: 0 5px;
-    border-radius: 5px; /* Rounded corners for labels */
+.form-subtitle {
+  display: block;
+  text-align: center;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  color: #6b7280;
 }
 
-.textarea label {
-    top: 10px; /* Position label inside textarea */
-    left: 10px; /* Align with padding of textarea */
+.form-note {
+  display: block;
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 0.9rem;
 }
 
-.input-data input:focus ~ label,
-.input-data input:not(:placeholder-shown) ~ label,
-.textarea textarea:focus ~ label,
-.textarea textarea:not(:placeholder-shown) ~ label {
-    transform: translateY(-150%) scale(0.8);
-    font-size: 16px; /* Adjust font size when label is active */
-    color: white;
+.contact-form .ant-form-item-label > label {
+  color: #1e40af;
+  font-weight: 500;
+  font-size: 0.95rem;
 }
 
-.underline {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 2px;
-    width: 100%;
-    background: grey;
-    transition: transform 0.3s ease;
+.contact-form .ant-input,
+.contact-form .ant-input-affix-wrapper,
+.contact-form .ant-input-textarea {
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 12px 16px;
+  transition: all 0.2s;
+  background: #f9fafb;
 }
 
-.input-data input:focus ~ .underline,
-.textarea textarea:focus ~ .underline {
-    transform: scaleX(1);
+.contact-form .ant-input:hover,
+.contact-form .ant-input-affix-wrapper:hover {
+  border-color: #9ca3af;
+  background: white;
+}
+
+.contact-form .ant-input:focus,
+.contact-form .ant-input-focused,
+.contact-form .ant-input-affix-wrapper:focus,
+.contact-form .ant-input-affix-wrapper-focused {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  background: white;
+}
+
+.contact-form .ant-input-prefix {
+  margin-right: 8px;
+  color: #9ca3af;
 }
 
 .submit-btn {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+  height: 48px;
+  border-radius: 8px;
+  background: #3b82f6;
+  border: none;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-    .submit-btn .input-data {
-        height: auto;
-        display: flex;
-        align-items: center;
-    }
-
-    .submit-btn input[type="submit"] {
-        background-color: rgb(59, 203, 255);
-        color: #fff;
-        border: none;
-        /*padding: 10px 20px;*/
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-        .submit-btn input[type="submit"]:hover {
-            background-color: rgb(28, 95, 120);
-        }
-
-.text-danger {
-    color: #dc3545;
+.submit-btn:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
-/* Style for the h1 element inside the form */
-.containerform h1 {
-    font-size: 2.5rem; /* Make the font size larger */
-    font-weight: bold; /* Make the text bold */
-    color: rgb(255, 255, 255); /* White text to stand out */
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Add some shadow for depth */
-    margin-bottom: 10px; /* Add space below the heading */
-    text-align: center; /* Center align the text */
+.submit-btn:active {
+  transform: translateY(0);
 }
 
-/* Style for the p elements inside the form */
-.containerform p {
-    font-size: 1.2rem; /* Slightly increase the font size */
-    color: rgba(255, 255, 255, 0.8); /* White text with transparency */
-    margin-bottom: 15px; /* Space below the paragraph */
-    text-align: center; /* Center align the paragraph text */
+.ant-divider {
+  border-top-color: rgba(0, 0, 0, 0.06);
+  margin: 16px 0;
 }
 
-/* Stack the columns under each other on smaller screens */
 @media (max-width: 768px) {
-    .top-container-form{
-        padding-left: 5%;
-        width: 90%;
-        padding-right: 5%;
-    }
-    .containerform{
-      
-        margin: 0;
-        margin-bottom: 10px;
-        width: 90%;
-    }
+  .modern-form-container {
+    padding: 16px;
+  }
+  
+  .form-card {
+    padding: 24px;
+    border-radius: 12px;
+  }
+  
+  .form-title {
+    font-size: 1.5rem;
+  }
 }

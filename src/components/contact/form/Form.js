@@ -1,225 +1,164 @@
 import React, { useState } from "react";
-import emailjs from "emailjs-com"; 
-import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
-import './Form.css';  // Import styles for the Alert component
+import { Form, Input, Button, Typography, message, Card, Divider, Row, Col } from "antd";
+import { MailOutlined, UserOutlined, PhoneOutlined} from '@ant-design/icons';
+import emailjs from "emailjs-com";
+import { useNavigate } from "react-router-dom";
+import './Form.css';
 
-const Form = () => {
-  // State to manage form data
-  const [formData, setFormData] = useState({
-    naam: "",
-    email: "",
-    onderwerp: "",
-    hondnaam: "",
-    ras: "",
-    leeftijd: "",
-    message: "",
-  });
+const { Title, Text } = Typography;
+const { TextArea } = Input;
 
-  // State to manage errors
-  const [errors, setErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState("");
-  
-  // Initialize useNavigate hook
+const ContactForm = () => {
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Function to handle input change
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  // Simple validation function
-  const validate = () => {
-    let tempErrors = {};
-    if (!formData.naam) tempErrors.naam = "Naam is required";
-    if (!formData.email) tempErrors.email = "E-mailadres is required";
-    if (!formData.onderwerp) tempErrors.onderwerp = "Onderwerp is required";
-    if (!formData.hondnaam) tempErrors.hondnaam = "Naam van de hond is required";
-    if (!formData.ras) tempErrors.ras = "Ras van de hond is required";
-    if (!formData.leeftijd) tempErrors.leeftijd = "Leeftijd van de hond is required";
-    if (!formData.message) tempErrors.message = "Vragen zijn verplicht";
-    return tempErrors;
-  };
-
-  // Handling form submission and sending via EmailJS
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length === 0) {
-      // Send email using EmailJS
-      emailjs
-        .send(
-          "service_xzv51jn", // Replace with your EmailJS service ID
-          "template_bxml3jz", // Replace with your EmailJS template ID
-          formData,
-          "eLTU-oozx3Gy3kjkz" // Replace with your EmailJS user ID
-        )
-        .then(
-          (response) => {
-            setSuccessMessage("Your message has been sent successfully!");
-            setFormData({
-              naam: "",
-              email: "",
-              onderwerp: "",
-              hondnaam: "",
-              ras: "",
-              leeftijd: "",
-              message: "",
-            }); // Reset form data
-
-            // Redirect to the success page using useNavigate
-            navigate('/success'); // Navigate to the success page
-          },
-          (error) => {
-            console.error("FAILED...", error);
-            setErrors({ submit: "Failed to send the message. Please try again later." });
-          }
-        );
-    } else {
-      setErrors(validationErrors);
-    }
+  const onFinish = (values) => {
+    setLoading(true);
+    emailjs.send(
+      "service_xzv51jn",
+      "template_bxml3jz",
+      values,
+      "eLTU-oozx3Gy3kjkz"
+    )
+    .then(() => {
+      message.success('Bericht succesvol verzonden!');
+      form.resetFields();
+      navigate('/success');
+    })
+    .catch(() => {
+      message.error('Er is een fout opgetreden. Probeer later opnieuw.');
+    })
+    .finally(() => setLoading(false));
   };
 
   return (
-    <div className="top-container-form">
-    <div className="containerform">
-      <h1>Vragen?</h1>
-      <p>Stel ze hier!</p>
-      <p>Afspraken worden enkel gepland via een telefoontje!</p>
+    <div className="modern-form-container">
+      <Card className="form-card" bordered={false}>
+       
+        <Title level={3} className="form-title">Vragen?</Title>
+        <Text className="form-subtitle">Stel ze hier!</Text>
+     
+        <Divider />
+        <Text type="secondary" className="form-note">Afspraken worden enkel gepland via een telefoontje!</Text>
 
-      <form onSubmit={handleSubmit}>
-        <div className="form-row">
-          <div className="input-data">
-            <input
-              type="text"
-              name="naam"
-              id="Naam"
-              value={formData.naam}
-              onChange={handleChange}
-              required
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+          className="contact-form"
+        >
+          <Row gutter={24}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="naam"
+                label="Uw naam"
+                rules={[{ required: true, message: 'Naam is verplicht' }]}
+              >
+                <Input 
+                  placeholder="Vul uw naam in" 
+                  prefix={<UserOutlined />}
+                  size="large"
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="email"
+                label="E-mailadres"
+                rules={[
+                  { required: true, message: 'E-mail is verplicht' },
+                  { type: 'email', message: 'Ongeldig e-mailadres' }
+                ]}
+              >
+                <Input 
+                  placeholder="Vul uw e-mailadres in" 
+                  prefix={<MailOutlined />}
+                  size="large"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Form.Item
+            name="onderwerp"
+            label="Onderwerp"
+            rules={[{ required: true, message: 'Onderwerp is verplicht' }]}
+          >
+            <Input 
+              placeholder="Wat is uw vraag over?" 
+              size="large"
             />
-            <label htmlFor="Naam">uw naam</label>
-            <div className="underline"></div>
-            {errors.naam && <span className="text-danger">{errors.naam}</span>}
-          </div>
+          </Form.Item>
 
-          <div className="input-data">
-            <input
-              type="email"
-              name="email"
-              id="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
+          <Row gutter={24}>
+            <Col xs={24} md={8}>
+              <Form.Item
+                name="hondnaam"
+                label="Naam van de hond"
+                rules={[{ required: true, message: 'Naam hond is verplicht' }]}
+              >
+                <Input 
+                  placeholder="Naam van uw hond" 
+                  size="large"
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={8}>
+              <Form.Item
+                name="ras"
+                label="Ras van de hond"
+                rules={[{ required: true, message: 'Ras is verplicht' }]}
+              >
+                <Input 
+                  placeholder="Ras van uw hond" 
+                  size="large"
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={8}>
+              <Form.Item
+                name="leeftijd"
+                label="Leeftijd van de hond"
+                rules={[{ required: true, message: 'Leeftijd is verplicht' }]}
+              >
+                <Input 
+                  placeholder="Leeftijd in jaren"
+                  size="large"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Form.Item
+            name="message"
+            label="Uw vraag"
+            rules={[{ required: true, message: 'Vraag is verplicht' }]}
+          >
+            <TextArea 
+              rows={5} 
+              placeholder="Stel uw vraag hier..." 
+              size="large"
+              style={{ resize: 'none' }}
             />
-            <label htmlFor="email">e-mailadres</label>
-            <div className="underline"></div>
-            {errors.email && <span className="text-danger">{errors.email}</span>}
-          </div>
-        </div>
+          </Form.Item>
 
-        <div className="form-row">
-          <div className="input-data">
-            <input
-              type="text"
-              name="onderwerp"
-              id="onderwerp"
-              value={formData.onderwerp}
-              onChange={handleChange}
-              required
-            />
-            <label htmlFor="onderwerp">onderwerp</label>
-            <div className="underline"></div>
-            {errors.onderwerp && (
-              <span className="text-danger">{errors.onderwerp}</span>
-            )}
-          </div>
-        </div>
-
-        <div className="form-row">
-          <div className="input-data">
-            <input
-              type="text"
-              name="hondnaam"
-              id="hondnaam"
-              value={formData.hondnaam}
-              onChange={handleChange}
-              required
-            />
-            <label htmlFor="hondnaam">naam van de hond</label>
-            <div className="underline"></div>
-            {errors.hondnaam && (
-              <span className="text-danger">{errors.hondnaam}</span>
-            )}
-          </div>
-        </div>
-
-        <div className="form-row">
-          <div className="input-data">
-            <input
-              type="text"
-              name="ras"
-              id="ras"
-              value={formData.ras}
-              onChange={handleChange}
-              required
-            />
-            <label htmlFor="ras">ras van de hond</label>
-            <div className="underline"></div>
-            {errors.ras && <span className="text-danger">{errors.ras}</span>}
-          </div>
-
-          <div className="input-data">
-            <input
-              type="text"
-              name="leeftijd"
-              id="leeftijd"
-              value={formData.leeftijd}
-              onChange={handleChange}
-              required
-            />
-            <label htmlFor="leeftijd">leeftijd van de hond</label>
-            <div className="underline"></div>
-            {errors.leeftijd && (
-              <span className="text-danger">{errors.leeftijd}</span>
-            )}
-          </div>
-        </div>
-
-        <div className="form-row">
-          <div className="input-data textarea">
-            <textarea
-              name="message"
-              rows="8"
-              id="message"
-              value={formData.message}
-              onChange={handleChange}
-              required
-            ></textarea>
-            <label htmlFor="message">stel uw vraag</label>
-            <div className="underline"></div>
-            {errors.message && (
-              <span className="text-danger">{errors.message}</span>
-            )}
-          </div>
-        </div>
-
-        <div className="form-row submit-btn">
-          <div className="input-data">
-            <input type="submit" value="verzend" />
-          </div>
-        </div>
-
-        {/* Displaying a success or error message */}
-        {successMessage && <p className="text-success">{successMessage}</p>}
-        {errors.submit && <p className="text-danger">{errors.submit}</p>}
-      </form>
-    </div>
+          <Form.Item>
+            <Button 
+              type="primary" 
+              htmlType="submit" 
+              loading={loading}
+              className="submit-btn"
+              size="large"
+              block
+            >
+              Verzenden
+            </Button>
+          </Form.Item>
+        </Form>
+      </Card>
     </div>
   );
 };
 
-export default Form;
+export default ContactForm;

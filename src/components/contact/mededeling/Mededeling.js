@@ -1,16 +1,16 @@
 import React from 'react';
-import './Mededeling.css';  // Import styles for the Alert component
+import { Alert } from 'antd';
+import './Mededeling.css';
 
 function Mededeling() {
   return (
-   
-
-<div class="container-mededeling">
-    <p class="tekst">Afspraken worden enkel gepland via een telefoontje!</p>
-
-</div>
-
-
+    <Alert
+      className="modern-alert"
+      message="Afspraken worden enkel gepland via een telefoontje!"
+      type="info"
+      showIcon
+      banner
+    />
   );
 }
 

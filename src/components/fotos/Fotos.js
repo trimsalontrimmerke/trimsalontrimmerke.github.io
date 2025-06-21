@@ -1,141 +1,174 @@
 // src/components/Fotos.js
 import React, { useState, useEffect } from "react";
-import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { collection, query, orderBy, getDocs } from "firebase/firestore";
-import {db , storage} from '../../firebaseConfig'
-import "./Fotos.css"; // Your CSS styles
+import { db, storage } from '../../firebaseConfig';
+import { 
+  Pagination, 
+  Row, 
+  Col, 
+  Empty, 
+  Spin,
+  Typography,
+  Card,
+  Image,
+  notification
+} from 'antd';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import "./Fotos.css";
+
+const { Title } = Typography;
 
 function Fotos() {
   const [photos, setPhotos] = useState([]);
-  const [photosPerPage, setPhotosPerPage] = useState(getPhotosPerPage());
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [photosPerPage, setPhotosPerPage] = useState(8);
 
-  // Dynamically determine the number of photos per page based on screen width
-  function getPhotosPerPage() {
-    const screenWidth = window.innerWidth;
-    return screenWidth < 576 ? 1 : 6; // Mobile: 1 photo per page, others: 6 photos
-  }
-
+  const calculatePhotosPerPage = () => {
+    const width = window.innerWidth;
+    if (width < 576) return 2;
+    if (width < 768) return 4;
+    if (width < 1200) return 6;
+    return 8;
+  };
   const fetchPhotos = async () => {
     setLoading(true);
     try {
-      // Step 1: Fetch metadata from Firestore, ordered by upload time
       const firestoreCollection = collection(db, "images");
-      const q = query(firestoreCollection, orderBy("uploadTime", "desc")); // Order by upload time, newest first
+      const q = query(firestoreCollection, orderBy("uploadTime", "desc"));
       const querySnapshot = await getDocs(q);
   
-      // Step 2: Fetch download URLs for each image
-      const urls = await Promise.all(
+      const photoData = await Promise.all(
         querySnapshot.docs.map(async (doc) => {
           const data = doc.data();
-          const url = await getDownloadURL(ref(storage, data.path)); // Get the URL for the image from Firebase Storage
-          return url;
+          try {
+            const url = await getDownloadURL(ref(storage, data.path));
+            return { url, id: doc.id, ...data };
+          } catch (err) {
+            console.error(`Error loading image ${data.path}:`, err);
+            return null;
+          }
         })
       );
   
-      // Step 3: Set the sorted URLs
-      setPhotos(urls); // Set the array of image URLs
-  
+      setPhotos(photoData.filter(photo => photo !== null));
     } catch (err) {
       console.error("Error fetching photos:", err);
       setError("Failed to load photos. Please try again later.");
+      notification.error({
+        message: 'Error Loading Photos',
+        description: 'Could not load the photo gallery.',
+      });
     } finally {
       setLoading(false);
     }
   };
 
+  
   useEffect(() => {
-    fetchPhotos(); // Fetch photos on component mount
+    fetchPhotos();
+    setPhotosPerPage(calculatePhotosPerPage());
+
+    const handleResize = () => {
+      const newPhotosPerPage = calculatePhotosPerPage();
+      if (newPhotosPerPage !== photosPerPage) {
+        setPhotosPerPage(newPhotosPerPage);
+        setCurrentPage(1);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Handle page changes
-  const handlePageChange = (page) => {
-    if (page < 1 || page > Math.ceil(photos.length / photosPerPage)) {
-      return; // Don't change page if it's out of bounds
-    }
-    setCurrentPage(page);
-  };
-
-  // Determine the photos to display on the current page
   const indexOfLastPhoto = currentPage * photosPerPage;
   const indexOfFirstPhoto = indexOfLastPhoto - photosPerPage;
   const currentPhotos = photos.slice(indexOfFirstPhoto, indexOfLastPhoto);
-  const totalPages = Math.ceil(photos.length / photosPerPage);
 
-  // Update the number of photos per page on window resize
-  window.onresize = () => {
-    const newPhotosPerPage = getPhotosPerPage();
-    if (newPhotosPerPage !== photosPerPage) {
-      setPhotosPerPage(newPhotosPerPage);
-      setCurrentPage(1);
-    }
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  return (
+   return (
     <div className="fotos-container">
-      <h1 className="text-center">Foto’s van onze blije klantjes</h1>
+      <Title level={2} className="fotos-title">
+        Foto's van onze blije klantjes
+      </Title>
 
-      {loading && <p>Loading photos...</p>}
-      {error && <p className="error">{error}</p>}
-
-      <div className="fotos-grid">
-        {currentPhotos.map((photo, index) => (
-          <div className="fotos-gallery-item" key={index}>
-            <img
-              src={photo}
-              alt={`Photo ${index + 1}`}
-              className="fotos-img img-fluid"
-              onError={() => console.error(`Failed to load image: ${photo}`)} // Handle image loading errors
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Centered Pagination */}
-      <nav className="fotos-pagination-container" aria-label="Page navigation">
-        <ul className="fotos-pagination justify-content-center">
-          <li className={`fotos-page-item ${currentPage === 1 ? "disabled" : ""}`}>
-            <button
-              className="fotos-page-link"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              &laquo; Vorige
-            </button>
-          </li>
-
-          {photosPerPage > 1 &&
-            Array.from({ length: totalPages }, (_, index) => (
-              <li
-                className={`fotos-page-item ${currentPage === index + 1 ? "active" : ""}`}
-                key={index}
+      {loading ? (
+        <div className="loading-spinner">
+          <Spin size="large" />
+        </div>
+      ) : error ? (
+        <Empty description={error} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      ) : (
+        <>
+          <Row gutter={[16, 16]} className="fotos-grid">
+            {currentPhotos.map((photo) => (
+              <Col 
+                key={photo.id} 
+                xs={24} 
+                sm={12} 
+                md={8} 
+                lg={6} 
+                xl={6}
               >
-                <button
-                  className="fotos-page-link"
-                  onClick={() => handlePageChange(index + 1)}
-                >
-                  {index + 1}
-                </button>
-              </li>
+                <div className="photo-item">
+                  <Image
+                    src={photo.url}
+                    alt={`Photo ${photo.id}`}
+                    className="photo-img"
+                    loading="lazy"
+                    placeholder={
+                      <div className="image-placeholder">
+                        <Spin />
+                      </div>
+                    }
+                    onError={() => {
+                      notification.warning({
+                        message: 'Image Load Error',
+                        description: `Could not load image ${photo.id}`,
+                      });
+                    }}
+                  />
+                </div>
+              </Col>
             ))}
+          </Row>
 
-          <li
-            className={`fotos-page-item ${
-              currentPage === totalPages ? "disabled" : ""
-            }`}
-          >
-            <button
-              className="fotos-page-link"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            >
-              Volgende &raquo;
-            </button>
-          </li>
-        </ul>
-      </nav>
+          {photos.length > 0 && (
+            <div className="pagination-container">
+              <Pagination
+                current={currentPage}
+                total={photos.length}
+                pageSize={photosPerPage}
+                onChange={handlePageChange}
+                showSizeChanger={false}
+                itemRender={(current, type, originalElement) => {
+                  if (type === 'prev') {
+                    return (
+                      <button className="ant-pagination-item-link">
+                        <LeftOutlined /> Vorige
+                      </button>
+                    );
+                  }
+                  if (type === 'next') {
+                    return (
+                      <button className="ant-pagination-item-link">
+                        Volgende <RightOutlined />
+                      </button>
+                    );
+                  }
+                  return originalElement;
+                }}
+              />
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
