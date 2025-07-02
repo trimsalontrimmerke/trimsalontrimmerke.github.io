@@ -1,125 +1,159 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../../../firebaseConfig'; // Ensure this path is correct
+import { db } from '../../../firebaseConfig';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import './BackAlert.css';
+import { 
+  Card, 
+  Form, 
+  Input, 
+  Button, 
+  Switch, 
+  message, 
+  Spin,
+  Typography,
+  Layout
+} from 'antd';
+import { 
+  NotificationOutlined,
+  CheckOutlined,
+  CloseOutlined
+} from '@ant-design/icons';
 import BackNav from '../nav/BackNav';
-import useAuth from '../../../hooks/useAuth'; // Import the custom useAuth hook
+import useAuth from '../../../hooks/useAuth';
+import './BackAlert.css'; // We'll update this too
+
+const { Title } = Typography;
+const { Content } = Layout;
 
 const BackAlert = () => {
-  const [alertData, setAlertData] = useState({ text: '', show: false });
+  const [form] = Form.useForm();
   const [loading, setLoading] = useState(true);
-  const [newText, setNewText] = useState('');
-  const [newShow, setNewShow] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [updating, setUpdating] = useState(false);
+  const { isLoggedIn, loading: authLoading } = useAuth();
 
-  const { isLoggedIn, loading: authLoading, errorMessage: authError } = useAuth(); // Use the custom hook
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchAlertData();
+    }
+  }, [isLoggedIn]);
 
-   useEffect(() => {
-          if (isLoggedIn) {
-              fetchAlertData(); 
-          }
-      }, [isLoggedIn]);
-  // Fetch the current alert from Firestore
   const fetchAlertData = async () => {
-    setErrorMessage("");
-    setSuccessMessage("");
     setLoading(true);
     try {
-      const medelingRef = doc(db, 'medeling', 'current'); // Reference to 'current' document
+      const medelingRef = doc(db, 'medeling', 'current');
       const docSnap = await getDoc(medelingRef);
 
       if (docSnap.exists()) {
         const data = docSnap.data();
-        setAlertData(data);
-        setNewText(data.text);
-        setNewShow(data.show);
+        form.setFieldsValue({
+          text: data.text,
+          show: data.show
+        });
       } else {
-        setErrorMessage('No alert data found in Firestore.');
+        message.warning('No alert data found in Firestore.');
       }
     } catch (error) {
-      setErrorMessage('Error fetching alert data.');
+      message.error('Error fetching alert data.');
     } finally {
       setLoading(false);
     }
   };
 
-  // Update the alert data in Firestore
-  const handleUpdateAlert = async () => {
-    setErrorMessage("");
-    setSuccessMessage("");
-    setLoading(true);
+  const handleUpdateAlert = async (values) => {
+    setUpdating(true);
     try {
-      const medelingRef = doc(db, 'medeling', 'current'); // Reference to 'current' document
-      const updatedMedeling = {
-        text: newText,
-        show: newShow,
-      };
-
-      await updateDoc(medelingRef, updatedMedeling); // Update the document in Firestore
-      setAlertData(updatedMedeling);
-      setSuccessMessage('Alert updated successfully!');
+      const medelingRef = doc(db, 'medeling', 'current');
+      await updateDoc(medelingRef, {
+        text: values.text,
+        show: values.show
+      });
+      message.success('Alert updated successfully!');
     } catch (error) {
-      setErrorMessage('Error updating alert.');
+      message.error('Error updating alert.');
     } finally {
-      setLoading(false);
+      setUpdating(false);
     }
   };
 
-  // Handle the case where the user is not logged in or authentication is still loading
   if (authLoading) {
-    return <p>Loading authentication...</p>;
+    return (
+      <Layout style={{ minHeight: '100vh' }}>
+        <BackNav />
+        <Content style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Spin size="large" />
+        </Content>
+      </Layout>
+    );
   }
 
   if (!isLoggedIn) {
-    return <p>Please log in to update the alert.</p>;
-  }
-
-  // Handle loading the alert data
-  if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <Layout style={{ minHeight: '100vh' }}>
+        <BackNav />
+        <Content style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Title level={4}>Please log in to update the alert</Title>
+        </Content>
+      </Layout>
+    );
   }
 
   return (
-    <div>
+    <Layout style={{ minHeight: '100vh' }}>
       <BackNav />
-      <div className="BackAlert-container">
-        <div className="BackAlert-content">
-          <h2 className="BackAlert-title">Admin - Update Alert</h2>
-          {successMessage && <p className="BackAlert-success-message">{successMessage}</p>}
-          {errorMessage && <p className="BackAlert-error-message">{errorMessage}</p>}
-
-          <div className="BackAlert-input-group">
-            <label className="BackAlert-label">
-              Alert Message:
-              <input
-                type="text"
-                value={newText}
-                onChange={(e) => setNewText(e.target.value)}
-                className="BackAlert-input"
+      <Content className="back-alert-container">
+        <Card 
+          title={
+            <span>
+              <NotificationOutlined style={{ marginRight: 8 }} />
+              Alert Management
+            </span>
+          }
+          className="back-alert-card"
+          loading={loading}
+        >
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={handleUpdateAlert}
+          >
+            <Form.Item
+              name="text"
+              label="Alert Message"
+              rules={[{ required: true, message: 'Please input the alert message!' }]}
+            >
+              <Input.TextArea 
+                rows={4} 
+                placeholder="Enter your alert message..."
+                maxLength={500}
+                showCount
               />
-            </label>
-          </div>
+            </Form.Item>
 
-          <div className="BackAlert-input-group">
-            <label className="BackAlert-label">
-              Show Alert:
-              <input
-                type="checkbox"
-                checked={newShow}
-                onChange={(e) => setNewShow(e.target.checked)}
-                className="BackAlert-checkbox"
+            <Form.Item
+              name="show"
+              label="Display Alert"
+              valuePropName="checked"
+            >
+              <Switch
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
               />
-              <span className="BackAlert-checkbox-custom"></span>
-            </label>
-          </div>
+            </Form.Item>
 
-          <button onClick={handleUpdateAlert} className="BackAlert-update-button">
-            Update Alert
-          </button>
-        </div>
-      </div>
-    </div>
+            <Form.Item>
+              <Button 
+                type="primary" 
+                htmlType="submit" 
+                loading={updating}
+                block
+                size="large"
+              >
+                Update Alert
+              </Button>
+            </Form.Item>
+          </Form>
+        </Card>
+      </Content>
+    </Layout>
   );
 };
 

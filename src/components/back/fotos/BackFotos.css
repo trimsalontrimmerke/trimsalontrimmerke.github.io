@@ -1,86 +1,55 @@
-.BackFotos-container {
-  margin: 20px;
-  font-family: Arial, sans-serif;
-}
-
-.BackFotos-upload-section {
-  margin-bottom: 20px;
+/* BackFotos.css - Modern Ant Design Styles */
+.back-fotos-container {
+  padding: 24px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 64px);
+  background-color: #f0f2f5;
 }
 
-.BackFotos-upload-section input {
-  margin-right: 10px;
-  padding: 10px;
-  width: 250px;
-  font-size: 16px;
+.back-fotos-card {
+  width: 100%;
+  max-width: 1200px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
 }
 
-.BackFotos-upload-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
+.back-fotos-card .ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.BackFotos-upload-button:hover {
-  background-color: #0056b3;
+.back-fotos-card .ant-card-head-title {
+  padding: 16px 0;
 }
 
-/* Flexbox container for images */
-.BackFotos-image-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: space-between; /* Space between images */
+.back-fotos-card .ant-card-body {
+  padding: 24px;
 }
 
-/* Each image takes up 30% of the container to fit 3 per row */
-.BackFotos-image-item {
-  flex: 0 0 calc(33.33% - 20px); /* 3 items per row, minus the gap */
-  max-width: 300px; /* Set a max width to keep images proportional */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
+/* Image card styles */
+.ant-card-cover img {
+  border-radius: 8px 8px 0 0;
 }
 
-.BackFotos-image-item:hover {
-  transform: scale(1.02); /* Slight hover effect */
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .back-fotos-container {
+    padding: 16px;
+  }
+  
+  .back-fotos-card {
+    border-radius: 0;
+    box-shadow: none;
+  }
 }
 
-.BackFotos-image-preview {
-  width: 100%; /* Make the image take full width */
-  height: auto;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+/* List item hover effect */
+.ant-list-item .ant-card {
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.BackFotos-image-item p {
-  margin: 10px 0 5px;
-  font-weight: bold;
-  text-align: center;
-}
-
-.BackFotos-delete-button {
-  background-color: #d9534f;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.BackFotos-delete-button:hover {
-  background-color: #c9302c;
+.ant-list-item .ant-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }

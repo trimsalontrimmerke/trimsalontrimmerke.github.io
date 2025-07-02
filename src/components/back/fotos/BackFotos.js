@@ -1,182 +1,236 @@
 import React, { useState, useEffect } from 'react';
-import { getStorage, ref, uploadBytes, listAll, deleteObject, getDownloadURL } from 'firebase/storage'; // Firebase Storage imports
-import { collection, query, orderBy, getDocs, addDoc, serverTimestamp,  where, deleteDoc, doc} from "firebase/firestore";
+import { 
+  Layout, 
+  Card, 
+  Button, 
+  Upload, 
+  List, 
+  Image, 
+  Spin, 
+  Typography, 
+  message,
+  Space,
+  Divider
+} from 'antd';
+import { 
+  UploadOutlined, 
+  DeleteOutlined 
+} from '@ant-design/icons';
+import { 
+  getStorage, 
+  ref, 
+  uploadBytes, 
+  deleteObject, 
+  getDownloadURL 
+} from 'firebase/storage';
+import { 
+  collection, 
+  query, 
+  orderBy, 
+  getDocs, 
+  addDoc, 
+  serverTimestamp,  
+  where, 
+  deleteDoc, 
+  doc
+} from "firebase/firestore";
 import { db, storage } from "../../../firebaseConfig";
-import './BackFotos.css'; // Import CSS for styling
 import BackNav from '../nav/BackNav';
-import useAuth from '../../../hooks/useAuth';  // Import the custom hook
+import useAuth from '../../../hooks/useAuth';
+import './BackFotos.css';
+
+const { Title } = Typography;
+const { Content } = Layout;
 
 const BackFotos = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [selectedFile, setSelectedFile] = useState(null);
-
-  const { userToken, isLoggedIn, loading: authLoading, errorMessage: authError } = useAuth(); // Use the custom hook
-  const storage = getStorage(); // Initialize Firebase Storage
+  const [uploading, setUploading] = useState(false);
+  const { isLoggedIn, loading: authLoading } = useAuth();
 
   useEffect(() => {
     if (isLoggedIn) {
-      fetchImages(); // Fetch images if logged in
+      fetchImages();
     }
   }, [isLoggedIn]);
 
-  // Fetch images from Firebase Storage
-  // Fetch images from Firestore and Firebase Storage
-const fetchImages = async () => {
-  setLoading(true);
-  try {
- 
-    // Query Firestore for metadata
-    const firestoreCollection = collection(db, "images"); // Use `db` here
-   
-    const q = query(firestoreCollection, orderBy("uploadTime", "desc")); // Order by upload time
-    const querySnapshot = await getDocs(q);
-
-    // Fetch download URLs from Firebase Storage
-    const imageUrls = await Promise.all(
-      querySnapshot.docs.map(async (doc) => {
-        const data = doc.data();
-        const url = await getDownloadURL(ref(storage, data.path)); // Use `storage` here
-        return { name: data.name, publicUrl: url, uploadTime: data.uploadTime.toDate() }; // Include upload time
-      })
-    );
-
-    setImages(imageUrls);
-  } catch (error) {
-    setErrorMessage("Error fetching images.");
-    console.error("Fetch error:", error);
-  } finally {
-    setLoading(false);
-  }
-};
-
-  // Handle file selection for upload
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
-
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      setErrorMessage("Please select a file to upload.");
-      return;
-    }
-  
-    const fileRef = ref(storage, `fotos/${selectedFile.name}`);
+  const fetchImages = async () => {
     setLoading(true);
-  
     try {
-      // Step 1: Upload file to Firebase Storage
-      await uploadBytes(fileRef, selectedFile);
-  
-      // Step 2: Save metadata in Firestore with a timestamp
-      const firestoreCollection = collection(db, "images"); // Use `db` for Firestore
-      await addDoc(firestoreCollection, {
-        name: selectedFile.name, // File name
-        path: `fotos/${selectedFile.name}`, // File path in storage
-        uploadTime: serverTimestamp() // Timestamp for upload time
-      });
-  
-      // Step 3: Notify the user and reset the state
-      setSuccessMessage("Image uploaded successfully!");
-      setSelectedFile(null); // Reset selected file
-      fetchImages(); // Refresh image list
+      const firestoreCollection = collection(db, "images");
+      const q = query(firestoreCollection, orderBy("uploadTime", "desc"));
+      const querySnapshot = await getDocs(q);
+
+      const imageUrls = await Promise.all(
+        querySnapshot.docs.map(async (doc) => {
+          const data = doc.data();
+          const url = await getDownloadURL(ref(storage, data.path));
+          return { 
+            id: doc.id,
+            name: data.name, 
+            publicUrl: url, 
+            uploadTime: data.uploadTime.toDate() 
+          };
+        })
+      );
+
+      setImages(imageUrls);
     } catch (error) {
-      setErrorMessage("Error uploading image.");
-      console.error("Upload error:", error);
+      message.error("Error fetching images.");
+      console.error("Fetch error:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDelete = async (filename) => {
-    setLoading(true);
-    const fileRef = ref(storage, `fotos/${filename}`);
-  
+  const handleUpload = async (file) => {
+    setUploading(true);
+    const fileRef = ref(storage, `fotos/${file.name}`);
+    
     try {
-      // Step 1: Delete file from Firebase Storage
-      await deleteObject(fileRef);
-  
-      // Step 2: Find and delete metadata from Firestore
-      const firestoreCollection = collection(db, "images");
-      const q = query(firestoreCollection, where("name", "==", filename)); // Query Firestore for the file's metadata
-      const querySnapshot = await getDocs(q);
-  
-      // Delete all matching documents (should ideally only be one document)
-      const deletePromises = querySnapshot.docs.map((docSnapshot) =>
-        deleteDoc(doc(db, "images", docSnapshot.id))
-      );
-      await Promise.all(deletePromises);
-  
-      // Step 3: Notify the user and refresh the image list
-      setSuccessMessage("Image deleted successfully!");
-      fetchImages(); // Refresh image list
+      // Upload to Storage
+      await uploadBytes(fileRef, file);
+      
+      // Add to Firestore
+      await addDoc(collection(db, "images"), {
+        name: file.name,
+        path: `fotos/${file.name}`,
+        uploadTime: serverTimestamp()
+      });
+      
+      message.success(`${file.name} uploaded successfully!`);
+      fetchImages();
     } catch (error) {
-      setErrorMessage("Error deleting image.");
+      message.error(`Error uploading ${file.name}.`);
+      console.error("Upload error:", error);
+    } finally {
+      setUploading(false);
+    }
+    return false; // Prevent default upload behavior
+  };
+
+  const handleDelete = async (image) => {
+    setLoading(true);
+    try {
+      // Delete from Storage
+      await deleteObject(ref(storage, `fotos/${image.name}`));
+      
+      // Delete from Firestore
+      await deleteDoc(doc(db, "images", image.id));
+      
+      message.success(`${image.name} deleted successfully!`);
+      fetchImages();
+    } catch (error) {
+      message.error(`Error deleting ${image.name}.`);
       console.error("Delete error:", error);
     } finally {
       setLoading(false);
     }
   };
 
+  const uploadProps = {
+    beforeUpload: handleUpload,
+    showUploadList: false,
+    multiple: false,
+    accept: 'image/*'
+  };
+
+  const formatDate = (date) => {
+  if (!date) return '';
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};
+
   if (authLoading) {
-    return <p className="loading-message">Loading authentication...</p>;
+    return (
+      <Layout style={{ minHeight: '100vh' }}>
+        <BackNav />
+        <Content style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Spin size="large" />
+        </Content>
+      </Layout>
+    );
   }
 
   if (!isLoggedIn) {
-    return <p className="warning-message">Please log in to manage photos.</p>;
-  }
-
-  if (loading) {
-    return <p className="loading-message">Loading...</p>;
+    return (
+      <Layout style={{ minHeight: '100vh' }}>
+        <BackNav />
+        <Content style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Title level={4}>Please log in to manage photos</Title>
+        </Content>
+      </Layout>
+    );
   }
 
   return (
-    <div>
+    <Layout style={{ minHeight: '100vh' }}>
       <BackNav />
-      <div className="BackFotos-container">
-        <h2>Admin - Manage Photos</h2>
-        {successMessage && <p className="BackFotos-success-message">{successMessage}</p>}
-        {errorMessage && <p className="BackFotos-error-message">{errorMessage}</p>}
+      <Content className="back-fotos-container">
+        <Card
+          title={
+            <Title level={2} style={{ margin: 0 }}>
+              Photo Management
+            </Title>
+          }
+          className="back-fotos-card"
+        >
+          <Space direction="vertical" size="large" style={{ width: '100%' }}>
+            <Upload {...uploadProps}>
+              <Button 
+                icon={<UploadOutlined />} 
+                type="primary"
+                loading={uploading}
+                size="large"
+              >
+                Upload Image
+              </Button>
+            </Upload>
 
-        <div className="BackFotos-upload-section">
-          <input 
-            type="file" 
-            onChange={handleFileChange} 
-            className="BackFotos-file-input" 
-            placeholder="Select an image to upload..." 
-          />
-          <button onClick={handleUpload} className="BackFotos-upload-button">Upload Image</button>
-        </div>
+            <Divider />
 
-        <h3>Uploaded Images</h3>
-        <div className="BackFotos-image-list">
-          {images.length === 0 ? (
-            <p>No images uploaded.</p>
-          ) : (
-            images.map((image) => (
-              <div key={image.publicUrl} className="BackFotos-image-item">
-                <img 
-                  src={image.publicUrl} 
-                  alt={image.name} 
-                  className="BackFotos-image-preview" 
-                />
-                <div className="BackFotos-image-details">
-                  <p className="BackFotos-image-name">{image.name}</p>
-                  <button 
-                    onClick={() => handleDelete(image.name)} 
-                    className="BackFotos-delete-button"
+            <List
+              grid={{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 4, xxl: 4 }}
+              dataSource={images}
+              loading={loading}
+              locale={{ emptyText: 'No images uploaded yet' }}
+              renderItem={(image) => (
+                <List.Item>
+                  <Card
+                    hoverable
+                    cover={
+                      <Image
+                        src={image.publicUrl}
+                        alt={image.name}
+                        preview={false}
+                        style={{ height: '200px', objectFit: 'cover' }}
+                      />
+                    }
+                    actions={[
+                      <Button 
+                        danger 
+                        icon={<DeleteOutlined />} 
+                        onClick={() => handleDelete(image)}
+                        loading={loading}
+                      >
+                        Delete
+                      </Button>
+                    ]}
                   >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-    </div>
+                    <Card.Meta
+                      title={image.name}
+                      description={`Uploaded: ${formatDate(image.uploadTime)}`}
+                    />
+                  </Card>
+                </List.Item>
+              )}
+            />
+          </Space>
+        </Card>
+      </Content>
+    </Layout>
   );
 };
 

@@ -1,120 +1,80 @@
-/* BackOpeningstijden.css */
-.BackOpeningstijden-container {
-    margin: 20px;
-    font-family: 'Arial', sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center content */
+/* BackOpening.css - Modern Ant Design Styles */
+.back-opening-container {
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 64px);
+  background-color: #f0f2f5;
 }
 
-.BackOpeningstijden-content {
-    width: 100%;
-    max-width: 600px; /* Limit the width for better readability */
-    background-color: #f9f9f9; /* Light background */
-    border-radius: 8px; /* Rounded corners */
-    padding: 20px; /* Inner spacing */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+.back-opening-card {
+  width: 100%;
+  max-width: 800px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
 }
 
-.BackOpeningstijden-title {
-    margin-bottom: 20px;
-    font-size: 24px; /* Title size */
-    color: #333; /* Darker color for contrast */
+.back-opening-card .ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.BackOpeningstijden-success-message,
-.BackOpeningstijden-error-message {
-    font-size: 16px; /* Message size */
-    margin: 10px 0; /* Spacing around messages */
+.back-opening-card .ant-card-head-title {
+  font-size: 18px;
+  font-weight: 500;
 }
 
-.BackOpeningstijden-days {
-    margin-bottom: 15px; /* Space between days section */
+.back-opening-day-section {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed #f0f0f0;
 }
 
-.BackOpeningstijden-day-section {
-    margin-bottom: 20px; /* Space between day sections */
+.back-opening-day-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
 }
 
-.BackOpeningstijden-day-title {
-    font-size: 20px; /* Day title size */
-    color: #333; /* Darker color for contrast */
+.back-opening-day-title {
+  margin-bottom: 16px !important;
+  color: #333;
 }
 
-.BackOpeningstijden-label {
-    font-size: 18px; /* Label size */
-    color: #555; /* Slightly lighter text */
-    display: block; /* Block display for spacing */
-    margin-top: 10px; /* Space above each label */
+/* Custom Switch Styles */
+.back-opening-switch.switch-closed.ant-switch-checked {
+  background: #ff4d4f !important; /* Red background when closed (on) */
 }
 
-.BackOpeningstijden-input {
-    width: 100%; /* Full width for the input */
-    padding: 10px; /* Inner padding */
-    border: 1px solid #ccc; /* Border color */
-    border-radius: 5px; /* Rounded corners */
-    margin-top: 5px; /* Space above input */
-    font-size: 16px; /* Input text size */
-    transition: border-color 0.3s; /* Smooth transition for border color */
+.back-opening-switch.switch-open:not(.ant-switch-checked) {
+  background: #52c41a !important; /* Green background when open (off) */
 }
 
-.BackOpeningstijden-input:focus {
-    border-color: #007bff; /* Highlight border on focus */
-    outline: none; /* Remove default outline */
+.back-opening-switch.switch-closed.ant-switch-checked .ant-switch-handle::before {
+  background-color: #fff; /* White handle when closed (on) */
 }
 
-.BackOpeningstijden-update-button {
-    background-color: #007bff; /* Button color */
-    color: white; /* Button text color */
-    border: none; /* Remove border */
-    padding: 10px 15px; /* Button padding */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor */
-    font-size: 18px; /* Button text size */
-    transition: background-color 0.3s; /* Smooth transition for background */
-    margin-top: 20px; /* Space above button */
+.back-opening-switch.switch-open:not(.ant-switch-checked) .ant-switch-handle::before {
+  background-color: #fff; /* White handle when open (off) */
 }
 
-.BackOpeningstijden-update-button:hover {
-    background-color: #0056b3; /* Darker shade on hover */
+/* Time picker styles */
+.ant-picker {
+  width: 100%;
 }
 
-/* Checkbox styles */
-.BackOpeningstijden-checkbox {
-    opacity: 0;
-    position: absolute;
-}
-
-.BackOpeningstijden-checkbox + .BackOpeningstijden-checkbox-custom {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    border: 2px solid #007bff;
-    border-radius: 4px;
-    background-color: white;
-    position: relative;
-    margin-left: 10px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.BackOpeningstijden-checkbox:checked + .BackOpeningstijden-checkbox-custom {
-    background-color: #007bff;
-    border-color: #0056b3;
-}
-
-.BackOpeningstijden-checkbox:checked + .BackOpeningstijden-checkbox-custom::after {
-    content: '';
-    position: absolute;
-    left: 6px;
-    top: 2px;
-    width: 10px;
-    height: 15px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-}
-
-.BackOpeningstijden-checkbox + .BackOpeningstijden-checkbox-custom:hover {
-    background-color: rgba(0, 123, 255, 0.1); /* Light blue on hover */
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .back-opening-container {
+    padding: 16px;
+  }
+  
+  .back-opening-card {
+    border-radius: 0;
+    box-shadow: none;
+  }
+  
+  .back-opening-day-section {
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+  }
 }

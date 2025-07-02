@@ -55,10 +55,27 @@ function Info() {
   const daysOfWeek = ['maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag', 'zondag'];
 
   return (
+   
     <div className="modern-info-container">
       <div className="info-grid">
-        <div className="contact-cards">
-          {contactItems.map((item, index) => (
+        <div className="contact-grid">
+          {/* Top row with phone and email side by side */}
+          <div className="top-row">
+            {contactItems.filter(item => item.title !== "Adres").map((item, index) => (
+              <div key={index} className="info-card">
+                <div className="info-card-content">
+                  <img alt={item.title} src={item.icon} className="card-icon" />
+                  <div className="card-text">
+                    <h3 className="card-title">{item.title}</h3>
+                    <div className="card-content">{item.content}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Address card */}
+          {contactItems.filter(item => item.title === "Adres").map((item, index) => (
             <div key={index} className="info-card">
               <div className="info-card-content">
                 <img alt={item.title} src={item.icon} className="card-icon" />
@@ -69,6 +86,18 @@ function Info() {
               </div>
             </div>
           ))}
+          
+          {/* Google Maps embed */}
+          <div className="map-container">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2518.215096678593!2d3.020787315746253!3d50.85436657953443!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c33a8a1c3e9d8f%3A0x1c1a1b1b1b1b1b1b!2sProostdiestraat%2015%2C%208980%20Beselare%2C%20Belgium!5e0!3m2!1sen!2sbe!4v1620000000000!5m2!1sen!2sbe" 
+              width="100%" 
+              height="100%" 
+              style={{border:0}} 
+              allowFullScreen="" 
+              loading="lazy">
+            </iframe>
+          </div>
         </div>
         
         <Card className="hours-card" hoverable>

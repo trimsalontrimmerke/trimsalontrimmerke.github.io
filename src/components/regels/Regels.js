@@ -17,7 +17,9 @@ function Regels() {
     "Laat uw hond zijn behoefte doen net voor u hem binnenbrengt. Zo gebeuren er geen ongelukjes in het trimsalon.",
     "Heeft uw hond medische problemen, allergieën, vlooien, epilepsie,... ? Laat het mij zeker op voorhand weten!",
     "Als u niet tevreden bent over de trimbeurt, laat u mij dit zo snel mogelijk weten. We bekijken dan samen hoe we voor een oplossing kunnen zorgen.",
-    "Kan u niet aanwezig zijn op uw afspraak? Contacteer mij dan minstens 24 uur op voorhand. Zo kan ik misschien nog een ander baasje gelukkig maken."
+    "Kan u niet aanwezig zijn op uw afspraak? Contacteer mij dan minstens 24 uur op voorhand. Zo kan ik misschien nog een ander baasje gelukkig maken.",
+    "Wanneer u niet komt opdagen op een gemaakte afspraak, ontvangt u bij de eerste keer een waarschuwing. Bij een volgende keer zal 50% van de kosten van de gemiste behandeling bij de volgende afspraak in rekening worden gebracht.",
+    "Bij het maken van een afspraak gaat u akkoord met bovenstaande regels."
   ];
 
   return (
