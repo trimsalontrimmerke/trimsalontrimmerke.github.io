@@ -1,70 +1,90 @@
 // src/components/Login.js
 import React, { useState } from 'react';
-import { auth } from '../../../firebaseConfig'; // Ensure to import the auth
+import { auth } from '../../../firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
+import { Card, Form, Input, Button, Typography, Alert } from 'antd';
 import './login.css';
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate(); // Initialize useNavigate
+const { Title, Text } = Typography;
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+const Login = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogin = async (values) => {
+    const { email, password } = values;
     setError('');
+    setLoading(true);
 
     try {
-      // Sign in the user with email and password
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Get ID token
       const token = await user.getIdToken();
-      localStorage.setItem('authToken', token); // Store token in local storage
+      localStorage.setItem('authToken', token);
 
-      // Redirect to /back/alert after successful login
       navigate('/back/alert');
-
-    } catch (error) {
-      setError(error.message); // Update error state
-      console.error("Error during login:", error);
+    } catch (err) {
+      setError(err.message);
+      console.error("Error during login:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="Login-container">
-      <div className="Login-card">
-        <h2 className="Login-title">Login</h2>
-        {error && <p className="Login-error-message">{error}</p>}
-        <form onSubmit={handleLogin} className="Login-form">
-          <div className="Login-form-group">
-            <label className="Login-label">Email:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="Login-input"
-            />
-          </div>
-          <div className="Login-form-group">
-            <label className="Login-label">Password:</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="Login-input"
-            />
-          </div>
-          <button type="submit" className="Login-button">Login</button>
-        </form>
-      </div>
+    <div className="login-container">
+      <Card className="login-card">
+        <Title level={3} className="login-title">
+          Login
+        </Title>
+        
+
+        {error && (
+          <Alert
+            message="Login Failed"
+            description={error}
+            type="error"
+            showIcon
+            className="login-error"
+          />
+        )}
+
+        <Form layout="vertical" onFinish={handleLogin} className="login-form">
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[{ required: true, message: 'Please input your email!' }]}
+          >
+            <Input placeholder="Enter your email" size="large" />
+          </Form.Item>
+
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[{ required: true, message: 'Please input your password!' }]}
+          >
+            <Input.Password placeholder="Enter your password" size="large" />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+              size="large"
+              loading={loading}
+              className="login-button"
+            >
+              Login
+            </Button>
+          </Form.Item>
+        </Form>
+      </Card>
     </div>
   );
-  
 };
 
 export default Login;

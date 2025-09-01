@@ -1,79 +1,67 @@
-.Login-container {
-    display: flex; /* Center the card */
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Full height of the viewport */
-    background-color: rgba(59, 203, 255, 0.2); /* Light background for contrast */
-    padding: 20px; /* Add padding */
-  }
-  
-  .Login-card {
-    background-color: white; /* White background for the card */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Shadow for depth */
-    padding: 40px; /* Internal padding for the card */
-    width: 400px; /* Fixed width for the card */
-    text-align: center; /* Center align text */
-  }
-  
-  .Login-title {
-    color: rgb(0, 107, 204); /* Title color */
-    margin-bottom: 20px; /* Space below the title */
-    font-family: 'Arial', sans-serif; /* Font family for title */
-    font-size: 24px; /* Increase font size */
-  }
-  
-  .Login-error-message {
-    color: red; /* Error message color */
-    margin-bottom: 15px; /* Space below the error message */
-  }
-  
-  .Login-form {
-    display: flex; /* Use flexbox for the form layout */
-    flex-direction: column; /* Stack items vertically */
-  }
-  
-  .Login-form-group {
-    margin-bottom: 15px; /* Space between form groups */
-  }
-  
-  .Login-label {
-    margin-bottom: 5px; /* Space between label and input */
-    font-weight: bold; /* Make labels bold */
-    color: rgb(0, 107, 204); /* Label color */
-    text-align: left; /* Align labels to the left */
-  }
-  
-  .Login-input {
-    padding: 12px; /* Add padding for input fields */
-    border: 1px solid rgb(0, 107, 204); /* Border with primary color */
-    border-radius: 5px; /* Round corners of input fields */
-    font-size: 16px; /* Increase font size for readability */
-    transition: border-color 0.3s; /* Smooth transition for border color */
-  }
-  
-  .Login-input:focus {
-    border-color: rgba(59, 203, 255, 0.7); /* Change border color on focus */
-    outline: none; /* Remove default outline */
-  }
-  
-  .Login-button {
-    background-color: rgb(0, 107, 204); /* Primary color for the button */
-    color: white; /* Text color for the button */
-    border: none; /* Remove border */
-    padding: 12px 20px; /* Padding for the button */
-    border-radius: 5px; /* Round corners */
-    cursor: pointer; /* Change cursor to pointer */
-    font-size: 16px; /* Increase font size for the button */
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effect */
-  }
-  
-  .Login-button:hover {
-    background-color: rgba(59, 203, 255, 0.7); /* Lighter color on hover */
-    transform: translateY(-2px); /* Slightly lift button on hover */
-  }
-  
-  .Login-button:active {
-    transform: translateY(0); /* Reset the lift effect when clicked */
-  }
-  
+/* Full page layout */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, rgba(59, 203, 255, 0.2), rgba(0, 107, 204, 0.1));
+  padding: 20px;
+}
+
+/* Card styles */
+.login-card {
+  width: 400px;
+  border-radius: 16px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+  padding: 30px 25px;
+  background-color: #fff;
+  transition: transform 0.2s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Title + subtitle */
+.login-title {
+  text-align: center;
+  color: #006bcc !important;
+  margin-bottom: 5px;
+}
+
+.login-subtitle {
+  display: block;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Error alert spacing */
+.login-error {
+  margin-bottom: 16px;
+}
+
+/* Form styles */
+.login-form .ant-form-item-label > label {
+  color: #006bcc;
+  font-weight: 500;
+}
+
+/* Button styles */
+.login-button {
+  background-color: #006bcc !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease !important;
+}
+
+.login-button:hover {
+  background-color: #3399ff !important;
+  transform: translateY(-1px);
+}
+
+.login-button:active {
+  transform: translateY(0);
+}
