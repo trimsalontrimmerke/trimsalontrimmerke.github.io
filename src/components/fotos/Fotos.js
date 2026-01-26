@@ -1,6 +1,6 @@
 // src/components/Fotos.js
 import React, { useState, useEffect } from "react";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { ref, getDownloadURL } from "firebase/storage";
 import { collection, query, orderBy, getDocs } from "firebase/firestore";
 import { db, storage } from '../../firebaseConfig';
 import { 
@@ -10,7 +10,6 @@ import {
   Empty, 
   Spin,
   Typography,
-  Card,
   Image,
   notification
 } from 'antd';

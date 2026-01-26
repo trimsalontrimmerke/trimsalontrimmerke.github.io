@@ -16,7 +16,7 @@ function Over() {
         <p class="pOver">Tot binnenkort!<br/>Marie</p>
     </div>
     <div class="section right-section">
-        <img src={`${process.env.PUBLIC_URL}/img/FotoMarie.jpg`}  alt="Right Image"/>
+        <img src={`${process.env.PUBLIC_URL}/img/FotoMarie.jpg`}  alt="Marie En Rocky"/>
     </div>
 </div>
 

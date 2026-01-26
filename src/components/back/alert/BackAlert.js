@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback  } from 'react';
 import { db } from '../../../firebaseConfig';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { 
@@ -30,13 +30,7 @@ const BackAlert = () => {
   const [updating, setUpdating] = useState(false);
   const { isLoggedIn, loading: authLoading } = useAuth();
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      fetchAlertData();
-    }
-  }, [isLoggedIn]);
-
-  const fetchAlertData = async () => {
+  const fetchAlertData = useCallback(async () => {
     setLoading(true);
     try {
       const medelingRef = doc(db, 'medeling', 'current');
@@ -56,8 +50,13 @@ const BackAlert = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [form]); // form is a dependency because we use form.setFieldsValue
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchAlertData();
+    }
+  }, [isLoggedIn, fetchAlertData]); // Now fetchAlertData is stable
   const handleUpdateAlert = async (values) => {
     setUpdating(true);
     try {

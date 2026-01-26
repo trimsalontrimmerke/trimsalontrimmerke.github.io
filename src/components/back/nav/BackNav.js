@@ -7,7 +7,8 @@ import {
   NotificationOutlined,
   ClockCircleOutlined,
   LogoutOutlined,
-  DashboardOutlined
+  DashboardOutlined,
+  GiftOutlined
 } from '@ant-design/icons';
 import './BackNav.css'; // We'll still use some custom CSS
 
@@ -51,6 +52,12 @@ const BackNav = () => {
       icon: <ClockCircleOutlined />,
       label: 'Hours',
       onClick: () => navigate('/back/openingsuren')
+    },
+    {
+      key: '/back/cadeau',
+      icon: <GiftOutlined />,
+      label: 'Cadeau',
+      onClick: () => navigate('/back/cadeau')
     },
     {
       key: 'logout',

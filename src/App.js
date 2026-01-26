@@ -15,6 +15,7 @@ import BackFotos from './components/back/fotos/BackFotos';
 import BackCarousel from './components/back/carousel/BackCarousel';
 import './App.css'; // Zorg ervoor dat je je CSS goed importeert
 import ScrollToTop from './ScrollToTop';
+import BackCadeau from './components/back/Cadeau/BackCadeau';
 
 function App() {
   return (
@@ -121,6 +122,7 @@ function App() {
             <Route path="/back/openingsuren" element={<BackOpeningHours />} />
             <Route path="/back/fotos" element={<BackFotos />} />
             <Route path="/back/carousel" element={<BackCarousel />} />
+            <Route path='/back/cadeau' element={<BackCadeau/>}/>
 
             {/* Catch-All Route */}
             <Route path="*"element={

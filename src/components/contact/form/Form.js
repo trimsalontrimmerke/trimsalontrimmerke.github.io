@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Typography, message, Card, Divider, Row, Col } from "antd";
-import { MailOutlined, UserOutlined, PhoneOutlined} from '@ant-design/icons';
+import { MailOutlined, UserOutlined} from '@ant-design/icons';
 import emailjs from "emailjs-com";
 import { useNavigate } from "react-router-dom";
 import './Form.css';

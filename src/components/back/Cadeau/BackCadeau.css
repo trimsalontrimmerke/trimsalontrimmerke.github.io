@@ -1,0 +1,41 @@
+/* BackFotos.css - Modern Ant Design Styles */
+.back-Cadeau-container {
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 64px);
+  background-color: #f0f2f5;
+}
+
+.back-Cadeau-card {
+  width: 100%;
+  max-width: 1200px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+}
+
+.back-Cadeau-card .ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.back-Cadeau-card .ant-card-head-title {
+  padding: 16px 0;
+}
+
+.back-Cadeau-card .ant-card-body {
+  padding: 24px;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .back-Cadeau-container {
+    padding: 16px;
+  }
+  
+  .back-Cadeau-card {
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
