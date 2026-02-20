@@ -47,6 +47,7 @@ const BackFotos = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [fileList, setFileList] = useState([]); // selected files for upload
   const { isLoggedIn, loading: authLoading } = useAuth();
 
   useEffect(() => {
@@ -84,10 +85,9 @@ const BackFotos = () => {
     }
   };
 
-  const handleUpload = async (file) => {
-    setUploading(true);
+  // Upload a single file (returns promise)
+  const uploadFile = async (file) => {
     const fileRef = ref(storage, `fotos/${file.name}`);
-    
     try {
       // Upload to Storage
       await uploadBytes(fileRef, file);
@@ -99,15 +99,42 @@ const BackFotos = () => {
         uploadTime: serverTimestamp()
       });
       
-      message.success(`${file.name} uploaded successfully!`);
-      fetchImages();
+      return { success: true, fileName: file.name };
     } catch (error) {
-      message.error(`Error uploading ${file.name}.`);
       console.error("Upload error:", error);
-    } finally {
-      setUploading(false);
+      return { success: false, fileName: file.name, error };
     }
-    return false; // Prevent default upload behavior
+  };
+
+  // Handle multiple file uploads
+  const handleUploadAll = async () => {
+    if (fileList.length === 0) {
+      message.warning("No files selected.");
+      return;
+    }
+
+    setUploading(true);
+    const results = [];
+
+    for (const file of fileList) {
+      const result = await uploadFile(file.originFileObj); // AntD wraps file in originFileObj
+      results.push(result);
+    }
+
+    // Show summary
+    const succeeded = results.filter(r => r.success).length;
+    const failed = results.length - succeeded;
+    if (succeeded > 0) {
+      message.success(`${succeeded} file(s) uploaded successfully.`);
+    }
+    if (failed > 0) {
+      message.error(`${failed} file(s) failed.`);
+    }
+
+    // Refresh list and clear selection
+    await fetchImages();
+    setFileList([]);
+    setUploading(false);
   };
 
   const handleDelete = async (image) => {
@@ -129,25 +156,28 @@ const BackFotos = () => {
     }
   };
 
+  // Upload props: allow multiple, controlled fileList
   const uploadProps = {
-    beforeUpload: handleUpload,
-    showUploadList: false,
-    multiple: false,
-    accept: 'image/*'
+    multiple: true,
+    fileList: fileList,
+    beforeUpload: () => false, // prevent auto upload
+    onChange: ({ fileList }) => setFileList(fileList),
+    accept: 'image/*',
+    showUploadList: true, // show list of selected files
   };
 
   const formatDate = (date) => {
-  if (!date) return '';
-  const day = date.getDate().toString().padStart(2, '0');
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
-};
+    if (!date) return '';
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
 
   if (authLoading) {
     return (
       <Layout style={{ minHeight: '100vh' }}>
-         <PageSEO page="backFotos" />
+        <PageSEO page="backFotos" />
         <BackNav />
         <Content style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Spin size="large" />
@@ -182,16 +212,27 @@ const BackFotos = () => {
           className="back-fotos-card"
         >
           <Space direction="vertical" size="large" style={{ width: '100%' }}>
-            <Upload {...uploadProps}>
-              <Button 
-                icon={<UploadOutlined />} 
-                type="primary"
-                loading={uploading}
-                size="large"
-              >
-                Upload Image
-              </Button>
-            </Upload>
+            <Space direction="horizontal" size="middle">
+              <Upload {...uploadProps}>
+                <Button 
+                  icon={<UploadOutlined />} 
+                  type="primary"
+                  disabled={uploading}
+                >
+                  Select Images
+                </Button>
+              </Upload>
+              {fileList.length > 0 && (
+                <Button 
+                  type="primary" 
+                  onClick={handleUploadAll}
+                  loading={uploading}
+                  disabled={uploading}
+                >
+                  Upload {fileList.length} file(s)
+                </Button>
+              )}
+            </Space>
 
             <Divider />
 

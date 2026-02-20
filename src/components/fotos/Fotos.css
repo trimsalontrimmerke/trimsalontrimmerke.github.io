@@ -1,109 +1,298 @@
-.pagination-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 40px;
-  width: 100%;
+/* src/components/Fotos.css */
+
+:root {
+  --primary-color: #006bcc;
+  --primary-dark: #0052a3;
+  --bg-light: #f8fafc;
+  --text-dark: #1e293b;
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 12px 24px rgba(0, 107, 204, 0.15);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-
-
-/* Fotos.css */
 .fotos-container {
   padding: 20px;
   max-width: 1400px;
   margin: 0 auto;
-  
+  background-color: var(--bg-light);
+  min-height: 100vh;
 }
 
+/* Title with gradient underline */
 .fotos-title {
-  color: #006bcc;
+  color: var(--text-dark);
   text-align: center;
-  margin: 20px 0 40px;
+  margin: 20px 0 50px;
   font-size: 2.5rem;
-  font-weight: 600;
+  font-weight: 700;
+  position: relative;
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-.loading-spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 300px;
+.fotos-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 25%;
+  width: 50%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+  border-radius: 2px;
 }
 
+/* Modern CSS Grid */
 .fotos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
   margin-bottom: 40px;
 }
 
-.photo-item {
-  width: 100%;
-  height: 150px; 
-  border-radius: 8px;
+.fotos-grid-item {
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  background: white;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  will-change: transform, box-shadow;
 }
 
-.photo-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+.fotos-grid-item:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-hover);
 }
 
-.photo-img {
+/* Image wrapper with aspect ratio */
+.image-wrapper {
+  position: relative;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #e2e8f0;
+  @supports not (aspect-ratio: 4/3) {
+    height: 0;
+    padding-bottom: 75%;
+  }
+}
+
+/* Ant Design Image overrides */
+.fotos-grid-item .ant-image,
+.fotos-grid-item .ant-image-img,
+.gallery-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
   display: block;
+}
+
+/* Scale image on hover */
+.fotos-grid-item:hover .gallery-image {
+  transform: scale(1.05);
+}
+
+/* Custom preview mask */
+.image-mask {
+  background: rgba(0, 107, 204, 0.95);
+  color: white;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 40px;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s;
+}
+
+.image-mask:hover {
+  background: var(--primary-dark);
 }
 
 .image-placeholder {
   width: 100%;
-  height: 280px;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f5f5f5;
+  background: #f1f5f9;
 }
 
-/* Keep existing pagination styles */
+/* Skeleton loading */
+.skeleton .image-wrapper {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Scroll fade-in animation */
+.fade-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== PAGINATION STYLING (UPDATED) ===== */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin: 50px 0 20px;
+}
+
+.ant-pagination {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Make numeric items perfect circles */
+.ant-pagination-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  border: none;
+  background: white;
+  border-radius: 50%; /* circle instead of pill */
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  margin: 0; /* remove any default margin */
+}
+
+.ant-pagination-item a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--text-dark);
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0; /* remove padding to keep circle tight */
+}
+
+.ant-pagination-item:hover {
+  background: var(--primary-color);
+  transform: scale(1.05);
+}
+
+.ant-pagination-item:hover a {
+  color: white;
+}
+
+.ant-pagination-item-active {
+  background: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(0, 107, 204, 0.3);
+}
+
+.ant-pagination-item-active a {
+  color: white;
+}
+
+/* Prev/Next buttons – same height as circles */
+.custom-pagination-prev,
+.custom-pagination-next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 16px;
+  height: 36px; /* match circle height */
+  border: none;
+  background: white;
+  border-radius: 36px; /* pill shape */
+  font-weight: 500;
+  color: var(--text-dark);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.custom-pagination-prev:hover,
+.custom-pagination-next:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 107, 204, 0.2);
+}
+
+.ant-pagination-disabled .custom-pagination-prev,
+.ant-pagination-disabled .custom-pagination-next {
+  opacity: 0.5;
+  pointer-events: none;
+  background: #f1f5f9;
+}
 
 /* Responsive adjustments */
-@media (max-width: 1200px) {
-  .photo-item,
-  .image-placeholder {
-    height: 240px;
-  }
-}
-
-@media (max-width: 992px) {
-  .photo-item,
-  .image-placeholder {
-    height: 110px;
-  }
-}
-
 @media (max-width: 768px) {
   .fotos-container {
     padding: 16px;
   }
-  
+
   .fotos-title {
-    font-size: 1.8rem;
-    margin-bottom: 30px;
+    font-size: 2rem;
+    margin-bottom: 40px;
   }
-  
-  .photo-item,
-  .image-placeholder {
-    height: 150px;
+
+  .fotos-grid {
+    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  .custom-pagination-prev,
+  .custom-pagination-next {
+    padding: 0 12px;
+    font-size: 14px;
+    height: 34px;
+  }
+
+  .ant-pagination-item {
+    min-width: 34px;
+    height: 34px;
   }
 }
 
 @media (max-width: 576px) {
   .fotos-title {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
-  
-  .photo-item,
-  .image-placeholder {
-    height: 160px;
+
+  .fotos-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .ant-pagination {
+    gap: 4px;
+  }
+
+  .custom-pagination-prev,
+  .custom-pagination-next {
+    padding: 0 8px;
+    font-size: 13px;
+    height: 32px;
+  }
+
+  .ant-pagination-item {
+    min-width: 32px;
+    height: 32px;
+    font-size: 13px;
   }
 }
