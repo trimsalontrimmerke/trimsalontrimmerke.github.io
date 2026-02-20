@@ -20,6 +20,7 @@ import {
 import BackNav from '../nav/BackNav';
 import useAuth from '../../../hooks/useAuth';
 import './BackAlert.css'; // We'll update this too
+import PageSEO from '../../PageSEO';
 
 const { Title } = Typography;
 const { Content } = Layout;
@@ -75,7 +76,9 @@ const BackAlert = () => {
 
   if (authLoading) {
     return (
+      
       <Layout style={{ minHeight: '100vh' }}>
+        <PageSEO page="backAlert" />
         <BackNav />
         <Content style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Spin size="large" />
@@ -87,6 +90,7 @@ const BackAlert = () => {
   if (!isLoggedIn) {
     return (
       <Layout style={{ minHeight: '100vh' }}>
+        <PageSEO page="backAlert" />
         <BackNav />
         <Content style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Title level={4}>Please log in to update the alert</Title>
@@ -97,6 +101,7 @@ const BackAlert = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
+      <PageSEO page="backAlert" />
       <BackNav />
       <Content className="back-alert-container">
         <Card 

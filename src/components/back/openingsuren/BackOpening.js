@@ -3,10 +3,11 @@ import { Layout, Card, Form, Button, TimePicker, Switch, Typography, Spin, messa
 import { ClockCircleOutlined } from '@ant-design/icons';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
-import moment from 'moment';
+import dayjs from 'dayjs';              // ✅ changed from moment
 import BackNav from '../nav/BackNav';
 import useAuth from '../../../hooks/useAuth';
 import './BackOpening.css';
+import PageSEO from '../../PageSEO';
 
 const { Title } = Typography;
 const { Content } = Layout;
@@ -43,8 +44,9 @@ const BackOpeningHours = () => {
         
         daysOrder.forEach(day => {
           formData[day] = {
-            open: data[day]?.open ? moment(data[day].open, 'HH:mm') : null,
-            close: data[day]?.close ? moment(data[day].close, 'HH:mm') : null,
+            // Use dayjs instead of moment
+            open: data[day]?.open ? dayjs(data[day].open, 'HH:mm') : null,
+            close: data[day]?.close ? dayjs(data[day].close, 'HH:mm') : null,
             isClosed: data[day]?.isClosed || false
           };
           initialSwitchStates[day] = data[day]?.isClosed || false;
@@ -83,6 +85,7 @@ const BackOpeningHours = () => {
       
       daysOrder.forEach(day => {
         formattedData[day] = {
+          // Format with dayjs
           open: values[day]?.open ? values[day].open.format('HH:mm') : '',
           close: values[day]?.close ? values[day].close.format('HH:mm') : '',
           isClosed: values[day]?.isClosed || false
@@ -102,6 +105,7 @@ const BackOpeningHours = () => {
   if (authLoading) {
     return (
       <Layout style={{ minHeight: '100vh' }}>
+        <PageSEO page="backOpeningHours" />
         <BackNav />
         <Content style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Spin size="large" />
@@ -113,6 +117,7 @@ const BackOpeningHours = () => {
   if (!isLoggedIn) {
     return (
       <Layout style={{ minHeight: '100vh' }}>
+        <PageSEO page="backOpeningHours" />
         <BackNav />
         <Content style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Title level={4}>Please log in to update opening hours</Title>
@@ -123,6 +128,7 @@ const BackOpeningHours = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
+      <PageSEO page="backOpeningHours" />
       <BackNav />
       <Content className="back-opening-container">
         <Card
@@ -144,7 +150,6 @@ const BackOpeningHours = () => {
                 
                 <Form.Item
                   name={[day, 'isClosed']}
-                  
                   valuePropName="checked"
                 >
                   <Switch

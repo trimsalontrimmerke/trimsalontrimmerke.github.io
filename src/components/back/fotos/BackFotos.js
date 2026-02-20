@@ -38,6 +38,7 @@ import { db, storage } from "../../../firebaseConfig";
 import BackNav from '../nav/BackNav';
 import useAuth from '../../../hooks/useAuth';
 import './BackFotos.css';
+import PageSEO from '../../PageSEO';
 
 const { Title } = Typography;
 const { Content } = Layout;
@@ -146,6 +147,7 @@ const BackFotos = () => {
   if (authLoading) {
     return (
       <Layout style={{ minHeight: '100vh' }}>
+         <PageSEO page="backFotos" />
         <BackNav />
         <Content style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Spin size="large" />
@@ -157,6 +159,7 @@ const BackFotos = () => {
   if (!isLoggedIn) {
     return (
       <Layout style={{ minHeight: '100vh' }}>
+        <PageSEO page="backFotos" />
         <BackNav />
         <Content style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Title level={4}>Please log in to manage photos</Title>
@@ -167,6 +170,7 @@ const BackFotos = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
+      <PageSEO page="backFotos" />
       <BackNav />
       <Content className="back-fotos-container">
         <Card

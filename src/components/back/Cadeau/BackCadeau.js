@@ -31,6 +31,7 @@ import dayjs from 'dayjs';
 import { Popconfirm } from 'antd';
 import useAuth from '../../../hooks/useAuth';
 import './BackCadeau.css';
+import PageSEO from '../../PageSEO';
 
 const { Title } = Typography;
 const { Content } = Layout;
@@ -211,6 +212,7 @@ const redeemVoucherAdmin = async (voucher) => {
    if (authLoading) {
     return (
       <Layout style={{ minHeight: '100vh' }}>
+        <PageSEO page="backCadeau" />
         <BackNav />
         <Content style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Spin size="large" />
@@ -222,6 +224,7 @@ const redeemVoucherAdmin = async (voucher) => {
   if (!isLoggedIn) {
     return (
       <Layout style={{ minHeight: '100vh' }}>
+        <PageSEO page="backCadeau" />
         <BackNav />
         <Content style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Title level={4}>Please log in to manage photos</Title>
@@ -232,13 +235,14 @@ const redeemVoucherAdmin = async (voucher) => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
+      <PageSEO page="backCadeau" />
       <BackNav />
 
       <Content className="back-Cadeau-container">
               <Card
                 title={
                   <Title level={2} style={{ margin: 0 }}>
-                   CadeauKaart Management
+                   Cadeaukaart Management
                   </Title>
                 }
                 className="back-Cadeau-card"
@@ -262,7 +266,7 @@ const redeemVoucherAdmin = async (voucher) => {
                 icon={<PlusOutlined />}
                 onClick={createVoucher}
               >
-                Generate Voucher
+                Generate Code
               </Button>
             }
           >

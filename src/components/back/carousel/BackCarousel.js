@@ -27,6 +27,7 @@ import {
 import BackNav from '../nav/BackNav';
 import useAuth from '../../../hooks/useAuth';
 import './BackCarousel.css';
+import PageSEO from '../../PageSEO';
 
 const { Title } = Typography;
 const { Content } = Layout;
@@ -108,6 +109,7 @@ const BackCarousel = () => {
   if (authLoading) {
     return (
       <Layout style={{ minHeight: '100vh' }}>
+        <PageSEO page="backCarousel" />
         <BackNav />
         <Content style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Spin size="large" />
@@ -119,6 +121,7 @@ const BackCarousel = () => {
   if (!isLoggedIn) {
     return (
       <Layout style={{ minHeight: '100vh' }}>
+         <PageSEO page="backCarousel" />
         <BackNav />
         <Content style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Title level={4}>Please log in to manage carousel images</Title>
@@ -129,6 +132,7 @@ const BackCarousel = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
+       <PageSEO page="backCarousel" />
       <BackNav />
       <Content className="back-carousel-container">
         <Card

@@ -1,20 +1,20 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Button, Typography } from 'antd';
 import './Home.css';
 import Alert from './alert/Alert';
 import Fotohome from './fotohome/Fotohome';
 import Over from './over/Over';
-import Carousel from '../carousel/Carousel';
+import Carousel from '../carousel/LazyCarousel.js';
+import PageSEO from '../PageSEO.js'
+import LazyCarousel from '../carousel/LazyCarousel.js';
 
 const { Title, Text, Paragraph } = Typography;
 
 function Home() {
-  useEffect(() => {
-    document.title = "Home | 't Trimmerke";
-  }, []);
-
   return (
     <div className="home">
+        <PageSEO page="home" />
+
       <Alert />
       
       {/* Hero Section */}
@@ -24,20 +24,13 @@ function Home() {
         <div className="hero-content">
           <Title className="hero-title">Welkom bij 't Trimmerke</Title>
           <Text className="hero-subtitle">
-            Professioneel trimsalon in Beselare
+            Uw specialist voor hondentrimmen, hondenbaden en vachtverzorging in Beselare en omstreken.
           </Text>
           <div className="hero-buttons">
-            <Button 
-              type="primary" 
-              size="large"
-              href="#about"
-            >
+            <Button type="primary" size="large" href="#about">
               Meer over mij
             </Button>
-            <Button 
-              size="large"
-              href="#gallery"
-            >
+            <Button size="large" href="#gallery">
               Onze werkwijze
             </Button>
           </div>
@@ -53,17 +46,14 @@ function Home() {
       <div id="gallery" className="gallery-section">
         <Title level={2} className="gallery-title">Onze Werkwijze</Title>
         <Paragraph className="gallery-description">
-          Een kijkje achter de schermen bij ons trimsalon.
+          Ontdek hoe wij te werk gaan: van een rustig welkom tot een grondige verzorging. 
+          Elk dier krijgt persoonlijke aandacht in ons knusse trimsalon in Beselare.
         </Paragraph>
-        <Carousel />
+        <LazyCarousel />
         
         <div style={{ marginTop: '60px', textAlign: 'center' }}>
           <Title level={3} style={{ marginBottom: '20px' }}>Bekijk ook onze tevreden klanten</Title>
-          <Button 
-            type="primary" 
-            size="large"
-            href="/fotos"  // Verwijzing naar de foto pagina
-          >
+          <Button type="primary" size="large" href="/fotos">
             Foto's van klanten
           </Button>
         </div>

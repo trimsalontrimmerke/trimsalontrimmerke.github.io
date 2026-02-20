@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Spin, Typography } from 'antd';
+import { Card, Spin } from 'antd';
 import { db } from '../../../firebaseConfig';
 import { doc, getDoc } from "firebase/firestore";
 import './Info.css';
 import { ClockCircleOutlined } from '@ant-design/icons';
-
 
 const contactItems = [
   {
@@ -54,7 +53,6 @@ function Info() {
   const daysOfWeek = ['maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag', 'zondag'];
 
   return (
-   
     <div className="modern-info-container">
       <div className="info-grid">
         <div className="contact-grid">
@@ -63,7 +61,14 @@ function Info() {
             {contactItems.filter(item => item.title !== "Adres").map((item, index) => (
               <div key={index} className="info-card">
                 <div className="info-card-content">
-                  <img alt={item.title} src={item.icon} className="card-icon" />
+                  {/* Added width & height attributes */}
+                  <img 
+                    alt={item.title} 
+                    src={item.icon} 
+                    className="card-icon" 
+                    width="40" 
+                    height="40" 
+                  />
                   <div className="card-text">
                     <h3 className="card-title">{item.title}</h3>
                     <div className="card-content">{item.content}</div>
@@ -77,7 +82,14 @@ function Info() {
           {contactItems.filter(item => item.title === "Adres").map((item, index) => (
             <div key={index} className="info-card">
               <div className="info-card-content">
-                <img alt={item.title} src={item.icon} className="card-icon" />
+                {/* Added width & height attributes */}
+                <img 
+                  alt={item.title} 
+                  src={item.icon} 
+                  className="card-icon" 
+                  width="40" 
+                  height="40" 
+                />
                 <div className="card-text">
                   <h3 className="card-title">{item.title}</h3>
                   <div className="card-content">{item.content}</div>
@@ -89,13 +101,14 @@ function Info() {
           {/* Google Maps embed */}
           <div className="map-container">
             <iframe 
-              title='Locatie van het trimsalon'
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2518.215096678593!2d3.020787315746253!3d50.85436657953443!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c33a8a1c3e9d8f%3A0x1c1a1b1b1b1b1b1b!2sProostdiestraat%2015%2C%208980%20Beselare%2C%20Belgium!5e0!3m2!1sen!2sbe!4v1620000000000!5m2!1sen!2sbe" 
-              width="100%" 
-              height="100%" 
-              style={{border:0}} 
-              allowFullScreen="" 
-              loading="lazy">
+              title="Locatie van het trimsalon"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2518.215096678593!2d3.020787315746253!3d50.85436657953443!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c33a8a1c3e9d8f%3A0x1c1a1b1b1b1b1b1b!2sProostdiestraat%2015%2C%208980%20Beselare%2C%20Belgium!5e0!3m2!1sen!2sbe!4v1620000000000!5m2!1sen!2sbe"
+              width="600" 
+              height="450" 
+              style={{ border: 0, width: '100%', height: '100%' }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade">
             </iframe>
           </div>
         </div>
@@ -129,4 +142,5 @@ function Info() {
     </div>
   );
 }
-export default Info; 
+
+export default Info;

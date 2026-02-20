@@ -15,7 +15,7 @@ import {
 } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import "./Fotos.css";
-
+import PageSEO from '../PageSEO.js'
 const { Title } = Typography;
 
 function Fotos() {
@@ -93,6 +93,7 @@ function Fotos() {
 
    return (
     <div className="fotos-container">
+      <PageSEO page="fotos" />
       <Title level={2} className="fotos-title">
         Foto's van onze blije klantjes
       </Title>
@@ -121,6 +122,8 @@ function Fotos() {
                     alt={`Photo ${photo.id}`}
                     className="photo-img"
                     loading="lazy"
+                    width={400}
+                    height={300}
                     placeholder={
                       <div className="image-placeholder">
                         <Spin />

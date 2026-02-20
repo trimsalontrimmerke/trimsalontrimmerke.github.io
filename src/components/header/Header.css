@@ -7,7 +7,7 @@
   z-index: 1000;
   width: 100%;
   border-bottom: 2px solid rgb(0, 107, 204);
-  transition: all 0.3s ease;
+  transition: height 0.3s ease;
 }
 
 .header-container.scrolled {
@@ -22,7 +22,7 @@
   margin: 0 auto;
   padding: 0 20px;
   height: 80px;
-  transition: all 0.3s ease;
+  transition: height 0.3s ease;
 }
 
 .header-container.scrolled .navbar-content {
@@ -38,7 +38,7 @@
 .logo {
   height: 60px;
   width: auto;
-  transition: all 0.3s ease;
+  transition: none; /* Scroll change instant */
 }
 
 .header-container.scrolled .logo {
@@ -57,7 +57,7 @@
   color: rgb(0, 107, 204);
   font-weight: 500;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease;
   padding: 8px 0;
   position: relative;
   white-space: nowrap;
@@ -95,12 +95,13 @@
 .social-icon {
   width: 28px;
   height: 28px;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease; /* Only transform for hover */
 }
 
 .header-container.scrolled .social-icon {
   width: 24px;
   height: 24px;
+  /* No transition – instant change */
 }
 
 .social-icon:hover {
@@ -115,11 +116,15 @@
   font-size: 24px;
   color: rgb(0, 107, 204);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease; /* For hover */
 }
 
 .header-container.scrolled .mobile-menu-button {
-  font-size: 20px;
+  font-size: 20px; /* instant change */
+}
+
+.mobile-menu-button:hover {
+  transform: scale(1.05);
 }
 
 @media (max-width: 768px) {

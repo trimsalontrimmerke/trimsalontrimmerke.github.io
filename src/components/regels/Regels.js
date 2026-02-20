@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './Regels.css';
 import { List, Card, Typography } from 'antd';
-
+import PageSEO from '../PageSEO';
 const { Title, Text } = Typography;
 
 function Regels() {
@@ -27,6 +27,7 @@ function Regels() {
       className="background-container"
       style={{ backgroundImage: `url(${backgroundImageUrl})` }}
     >
+      <PageSEO page="regels" />
       <Card className="rules-card">
         <div style={{ textAlign: 'center', marginBottom: '24px' }}>
           <Title level={2} style={{ color: '#1890ff', marginBottom: '8px' }}>Huisregels</Title>

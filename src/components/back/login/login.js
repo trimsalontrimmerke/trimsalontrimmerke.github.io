@@ -5,7 +5,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { Card, Form, Input, Button, Typography, Alert } from 'antd';
 import './login.css';
-
+import PageSEO from '../../PageSEO';
 const { Title, Text } = Typography;
 
 const Login = () => {
@@ -36,6 +36,7 @@ const Login = () => {
 
   return (
     <div className="login-container">
+      <PageSEO page="login" />
       <Card className="login-card">
         <Title level={3} className="login-title">
           Login

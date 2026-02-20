@@ -33,11 +33,13 @@ function Header() {
     <header className={`header-container ${scrolled ? 'scrolled' : ''}`}>
       <div className="navbar-content">
         {/* Logo - Left side */}
-        <Link to="/home" className="logo-link" onClick={closeMenu}>
+        <Link to="/" className="logo-link" onClick={closeMenu}>
           <img 
             className="logo" 
             src={`${process.env.PUBLIC_URL}/img/logo.jpg`} 
-            alt="Trimsalon Logo" 
+            alt="Trimsalon 't Trimmerke logo" 
+            width="150"   // adjust to your actual logo dimensions
+            height="60"   // adjust
           />
         </Link>
 
@@ -52,7 +54,7 @@ function Header() {
 
         {/* Navigation links - Centered */}
         <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
-          <Link className="nav-link" to="/home" onClick={closeMenu}>
+          <Link className="nav-link" to="/" onClick={closeMenu}>
             Home
           </Link>
           <Link className="nav-link" to="/regels" onClick={closeMenu}>
@@ -71,25 +73,29 @@ function Header() {
           <a 
             href="https://www.facebook.com/profile.php?id=61565857696098" 
             target="_blank" 
-            rel="noreferrer"
+            rel="noopener noreferrer"
             aria-label="Facebook"
           >
             <img 
               className="social-icon" 
               src={`${process.env.PUBLIC_URL}/img/facebook.png`} 
               alt="Facebook" 
+              width="28" 
+              height="28"
             />
           </a>
           <a 
             href="https://www.instagram.com/trimsalon_t_trimmerke/" 
             target="_blank" 
-            rel="noreferrer"
+            rel="noopener noreferrer"
             aria-label="Instagram"
           >
             <img 
               className="social-icon" 
               src={`${process.env.PUBLIC_URL}/img/insta.png`} 
               alt="Instagram" 
+              width="28" 
+              height="28"
             />
           </a>
         </div>
